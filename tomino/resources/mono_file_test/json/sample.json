@@ -1,0 +1,13 @@
+﻿{
+    "app_name": "MyApp",
+    "version": 2,
+    "debug": true,
+    "window": {
+        "width": 800,
+        "height": 600
+    },
+    "users": [
+        { "id": 1, "name": "Alice" },
+        { "id": 2, "name": "Bob" }
+    ]
+}

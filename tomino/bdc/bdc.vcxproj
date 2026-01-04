@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{c55147f0-f3a3-4888-9ef3-92bc02c0a4b6}</ProjectGuid>
+    <RootNamespace>bdc</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir);$(SolutionDir)imgui\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir);$(SolutionDir)imgui\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;d3dcompiler.lib;dxgi.lib;directx12_util.lib;render_graph.lib;mono_service.lib;mono_graphics_service.lib;mono_adapter.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;d3dcompiler.lib;dxgi.lib;directx12_util.lib;render_graph.lib;mono_service.lib;mono_graphics_service.lib;mono_adapter.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\bdc_cage\bdc_cage.vcxproj">
+      <Project>{3f5e1773-bdac-4bae-ad12-8dded14ddb72}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdc_dot\bdc_dot.vcxproj">
+      <Project>{09e16639-c094-4cd6-b6fa-ac449ee66ef9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdc_enemy\bdc_enemy.vcxproj">
+      <Project>{cb1753e6-5e20-46dd-91c8-11384b5d5174}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdc_game_flow\bdc_game_flow.vcxproj">
+      <Project>{f79d8e7c-41e4-46bd-b10b-4b7c8f907321}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdc_interactive_object\bdc_interactive_object.vcxproj">
+      <Project>{f691381f-c9ef-4861-8329-2b96954e0b2b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdc_player\bdc_player.vcxproj">
+      <Project>{e9637840-2da4-4b27-aabf-41077f9bc10a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdc_ui\bdc_ui.vcxproj">
+      <Project>{a97f7bcf-126e-460e-96b7-3e2b67d5b197}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mem_alloc_fixed_block\mem_alloc_fixed_block.vcxproj">
+      <Project>{c5895147-47e8-47ce-9cf8-b4bee2a2524f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_asset\mono_asset.vcxproj">
+      <Project>{430d8db1-1d42-4bef-825f-0593d47a0e0b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_cycle\mono_cycle.vcxproj">
+      <Project>{25f30487-b8db-4689-a093-16bad42d16cf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_d3d12\mono_d3d12.vcxproj">
+      <Project>{5ff342a5-dfda-4463-9388-55c38e89ae42}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_file\mono_file.vcxproj">
+      <Project>{cd70945c-b552-488b-bcc7-3e8d9db88056}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_identity\mono_identity.vcxproj">
+      <Project>{fef0695a-7353-400a-9218-09314af8f4b4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_object_controller\mono_object_controller.vcxproj">
+      <Project>{3979958e-2331-4388-b298-8ca1701672db}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_physics\mono_physics.vcxproj">
+      <Project>{b234336c-3e51-41c9-b7c5-c1865808b833}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\mono_render\mono_render.vcxproj">
+      <Project>{21fa46bc-19c3-4f91-833c-dbe8f5e1724f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\riaecs\riaecs.vcxproj">
+      <Project>{ca1b6480-e0d8-4ef7-bcc8-87b2a51b9f20}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\imgui\src\imgui.cpp" />
+    <ClCompile Include="..\imgui\src\imgui_demo.cpp" />
+    <ClCompile Include="..\imgui\src\imgui_draw.cpp" />
+    <ClCompile Include="..\imgui\src\imgui_impl_dx12.cpp" />
+    <ClCompile Include="..\imgui\src\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="..\imgui\src\imgui_widgets.cpp" />
+    <ClCompile Include="src\asset_source.cpp" />
+    <ClCompile Include="src\entities.cpp" />
+    <ClCompile Include="src\entry.cpp" />
+    <ClCompile Include="src\init.cpp" />
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\scene_menu.cpp" />
+    <ClCompile Include="src\scene_play.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\asset_source.h" />
+    <ClInclude Include="include\entities.h" />
+    <ClInclude Include="include\init.h" />
+    <ClInclude Include="include\materials.h" />
+    <ClInclude Include="include\scene_menu.h" />
+    <ClInclude Include="include\scene_play.h" />
+    <ClInclude Include="src\pch.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
