@@ -1,0 +1,770 @@
+#pragma kernel MeshGenerate
+#pragma kernel ThroughMeshGenerate
+#pragma kernel BlockUpdate
+#pragma kernel RaycastAtBlock
+#pragma kernel HitBox
+
+int CHUCK_SIZE;
+int WORLD_SIZE;
+int WORLD_HALF_SIZE;
+int WORLD_HEIGHT;
+
+RWStructuredBuffer<int> blocksID;
+RWStructuredBuffer<int> throughBlocksID;
+
+int VIEW_ORIGIN_X;
+int VIEW_ORIGIN_Y;
+int VIEW_ORIGIN_Z;
+int RENDER_DISTANCE;
+
+RWStructuredBuffer<int> counts;
+
+RWStructuredBuffer<float3> meshVs;
+RWStructuredBuffer<float2> meshUVs;
+RWStructuredBuffer<int> meshTris;
+
+float TEXTURE_BLOCK_TILE_U;
+float TEXTURE_BLOCK_TILE_V;
+
+int SOURCE_MESH_BLOCK_FACE_COUNT;
+int SOURCE_MESH_BLOCK_VS_INDEX;
+int SOURCE_MESH_BLOCK_TRIS_INDEX;
+int SOURCE_MESH_BLOCK_FRONT_FACES;
+int SOURCE_MESH_BLOCK_BACK_FACES;
+int SOURCE_MESH_BLOCK_LEFT_FACES;
+int SOURCE_MESH_BLOCK_RIGHT_FACES;
+int SOURCE_MESH_BLOCK_TOP_FACES;
+int SOURCE_MESH_BLOCK_BOTTOM_FACES;
+
+int SOURCE_MESH_GRASS_FACE_COUNT;
+int SOURCE_MESH_GRASS_VS_INDEX;
+int SOURCE_MESH_GRASS_TRIS_INDEX;
+int SOURCE_MESH_GRASS_FRONT_FACES;
+int SOURCE_MESH_GRASS_BACK_FACES;
+int SOURCE_MESH_GRASS_LEFT_FACES;
+int SOURCE_MESH_GRASS_RIGHT_FACES;
+int SOURCE_MESH_GRASS_TOP_FACES;
+int SOURCE_MESH_GRASS_BOTTOM_FACES;
+
+int SOURCE_MESH_STAIRS_FACE_COUNT;
+int SOURCE_MESH_STAIRS_VS_INDEX;
+int SOURCE_MESH_STAIRS_TRIS_INDEX;
+int SOURCE_MESH_STAIRS_FRONT_FACES;
+int SOURCE_MESH_STAIRS_BACK_FACES;
+int SOURCE_MESH_STAIRS_LEFT_FACES;
+int SOURCE_MESH_STAIRS_RIGHT_FACES;
+int SOURCE_MESH_STAIRS_TOP_FACES;
+int SOURCE_MESH_STAIRS_BOTTOM_FACES;
+
+RWStructuredBuffer<float3> sourceMeshVs;
+RWStructuredBuffer<float2> sourceMeshUVs;
+RWStructuredBuffer<int> sourceMeshTris;
+
+bool IsInWorldRange(int3 pos)
+{
+    if (
+        pos.x >= 0 && pos.x < WORLD_SIZE &&
+        pos.y >= 0 && pos.y < WORLD_HEIGHT &&
+        pos.z >= 0 && pos.z < WORLD_SIZE
+    ) return true;
+    else return false;
+}
+
+int CheckIsAir(int3 pos)
+{
+    if (IsInWorldRange(pos))
+    {
+        if (blocksID[pos.x + pos.y * WORLD_SIZE + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 0)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int CheckIsAirOrFluid(int3 pos)
+{
+    if (IsInWorldRange(pos))
+    {
+        if 
+        (
+            blocksID[pos.x + pos.y * WORLD_SIZE + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 0 ||
+            blocksID[pos.x + pos.y * WORLD_SIZE + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 6 ||
+            blocksID[pos.x + pos.y * WORLD_SIZE + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 7
+        ){
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+float3 ToCoordsConvert(int3 pos)
+{
+    return float3((float)pos.x - WORLD_HALF_SIZE, (float)pos.y, (float)pos.z - WORLD_HALF_SIZE);
+}
+
+int3 ToPosConvert(float3 pos)
+{
+    return int3((int)pos.x + WORLD_HALF_SIZE, (int)pos.y, (int)pos.z + WORLD_HALF_SIZE);
+}
+
+float2 GetUVFromID(int blockIndex)
+{
+    float2 rtValue = float2
+    (
+        (blockIndex - 1) % 5 * TEXTURE_BLOCK_TILE_U, 
+        -(int)((blockIndex - 1) / 5) * TEXTURE_BLOCK_TILE_V
+    );
+
+    return rtValue;
+}
+
+bool IsThroughBlock(int blockId)
+{
+    switch (blockId)
+    {
+        case 6: // WATER
+        case 7: // LAVA
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+// 0 : NORMAL, 1 : GRASS, 2 : WATER, 3 : LAVA
+int GetBlockType(int blockId)
+{
+    switch (blockId)
+    {
+        case 1: // BEDROCK
+        case 2: // DIRT
+        case 8: // OBSIDIAN
+        case 9: // STONE
+        case 10: // COBBLESTONE
+        case 11: // STONE_ANDESITE
+        case 12: // STONE_DIORITE
+        case 13: // STONE_GRANITE
+        case 14: // COAL_ORE
+        case 15: // IRON_ORE
+        case 16: // GOLD_ORE
+        case 17: // DIAMOND_ORE
+        case 18: // EMERALD_ORE
+        case 19: // LAPIS_ORE
+        case 20: // LEAVES
+        case 24: // PLANKS_OAK
+        case 25: // PLANKS_BIRCH
+        case 29: // GRAVEL
+        case 30: // HARDENED_CLAY
+        case 31: // HARDENED_CLAY_STAINED_BLACK
+        case 32: // HARDENED_CLAY_STAINED_BLUE
+        case 33: // HARDENED_CLAY_STAINED_BROWN
+        case 34: // HARDENED_CLAY_STAINED_CYAN
+        case 35: // HARDENED_CLAY_STAINED_GRAY
+        case 36: // HARDENED_CLAY_STAINED_GREEN
+        case 37: // HARDENED_CLAY_STAINED_LIGHT_BLUE
+        case 38: // HARDENED_CLAY_STAINED_LIME
+        case 39: // HARDENED_CLAY_STAINED_MAGENTA
+        case 40: // HARDENED_CLAY_STAINED_ORANGE
+        case 41: // HARDENED_CLAY_STAINED_PINK
+        case 42: // HARDENED_CLAY_STAINED_PURPLE
+        case 43: // HARDENED_CLAY_STAINED_RED
+        case 44: // HARDENED_CLAY_STAINED_SILVER
+        case 45: // HARDENED_CLAY_STAINED_WHITE
+        case 46: // HARDENED_CLAY_STAINED_YELLOW
+        case 47: // WOOL_COLORED_BLUE
+        case 48: // WOOL_COLORED_BROWN
+        case 49: // WOOL_COLORED_CYAN
+        case 50: // WOOL_COLORED_GRAY
+        case 51: // WOOL_COLORED_GREEN
+        case 52: // WOOL_COLORED_LIGHT_BLUE
+        case 53: // WOOL_COLORED_LIME
+        case 54: // WOOL_COLORED_MAGENTA
+        case 55: // WOOL_COLORED_ORANGE
+        case 56: // WOOL_COLORED_PINK
+        case 57: // WOOL_COLORED_PURPLE
+        case 58: // WOOL_COLORED_RED
+        case 59: // WOOL_COLORED_SILVER
+        case 60: // WOOL_COLORED_WHITE
+        case 61: // WOOL_COLORED_YELLOW
+            return 0;
+
+        case 3: // GRASS_TOP
+        case 4: // GRASS_SIDE
+        case 5: // GRASS_BOTTOM
+        case 21: // LOG_OAK_TOP
+        case 22: // LOG_OAK_SIDE
+        case 23: // LOG_OAK_Bottom
+        case 26: // LOG_BIRCH_TOP
+        case 27: // LOG_BIRCH_SIDE
+        case 28: // LOG_BIRCH_Bottom
+            return 1;
+
+        case 6: // WATER
+            return 2;
+
+        case 7: // LAVA
+            return 3;
+    }
+
+    return 0;
+}
+
+int GetFaceCount(int blockId)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
+            return SOURCE_MESH_BLOCK_FACE_COUNT;
+
+        case 1: // GRASS
+            return SOURCE_MESH_GRASS_FACE_COUNT;
+    }
+
+    return 0;
+}
+
+int GetVsIndex(int blockId)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
+            return SOURCE_MESH_BLOCK_VS_INDEX;
+
+        case 1: // GRASS
+            return SOURCE_MESH_GRASS_VS_INDEX;
+    }
+
+    return 0;
+}
+
+int GetTrisIndex(int blockId)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
+            return SOURCE_MESH_BLOCK_TRIS_INDEX;
+
+        case 1: // GRASS
+            return SOURCE_MESH_GRASS_TRIS_INDEX;
+    }
+
+    return 0;
+}
+
+int GetFaces(int faceType, int frontFaces, int backFaces, int leftFaces, int rightFaces, int topFaces, int bottomFaces)
+{
+    switch (faceType)
+    {
+        case 0: return frontFaces;
+        case 1: return backFaces;
+        case 2: return leftFaces;
+        case 3: return rightFaces;
+        case 4: return topFaces;
+        case 5: return bottomFaces;
+    }
+
+    return 0;
+}
+
+int GetAmountOfFaces(int blockId, int faceType)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
+            return GetFaces
+            (
+                faceType, 
+                SOURCE_MESH_BLOCK_FRONT_FACES, 
+                SOURCE_MESH_BLOCK_BACK_FACES, 
+                SOURCE_MESH_BLOCK_LEFT_FACES, 
+                SOURCE_MESH_BLOCK_RIGHT_FACES, 
+                SOURCE_MESH_BLOCK_TOP_FACES, 
+                SOURCE_MESH_BLOCK_BOTTOM_FACES
+            );
+
+        case 1: // GRASS
+            return GetFaces
+            (
+                faceType, 
+                SOURCE_MESH_GRASS_FRONT_FACES, 
+                SOURCE_MESH_GRASS_BACK_FACES, 
+                SOURCE_MESH_GRASS_LEFT_FACES, 
+                SOURCE_MESH_GRASS_RIGHT_FACES, 
+                SOURCE_MESH_GRASS_TOP_FACES, 
+                SOURCE_MESH_GRASS_BOTTOM_FACES
+            );
+    }
+
+    return 0;
+}
+
+int GetHitboxPriority(int blockId)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+            return 1;
+
+        case 2: // WATER
+            return 2;
+
+        case 3: // LAVA
+            return 3;
+    }
+
+    return 0;
+}
+
+// 1 : NORMAL
+int GetHitboxType(int blockId)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+        case 1: // GRASS
+        case 2: // WATER
+        case 3: // LAVA
+            return 1;
+    }
+
+    return 0;
+}
+
+float3 GetHitboxOrigin(int hitboxType, float3 blockCoords)
+{
+    switch (hitboxType)
+    {
+        case 1: // NORMAL
+            return float3(blockCoords.x - 0.5f, blockCoords.y - 0.5f, blockCoords.z - 0.5f);
+    }
+
+    return float3(0, 0, 0);
+}
+
+float3 GetHitboxOpposite(int hitboxType, float3 blockCoords)
+{
+    switch (hitboxType)
+    {
+        case 1: // NORMAL
+            return float3(blockCoords.x + 0.5f, blockCoords.y + 0.5f, blockCoords.z + 0.5f);
+    }
+
+    return float3(0, 0, 0);
+}
+
+int CALC_WIDTH;
+
+RWStructuredBuffer<uint> seeds;
+RWStructuredBuffer<float> heightMap;
+
+// シード値を更新する関数
+uint UpdateSeed(uint seed)
+{
+    return (seed * 1664525u + 1013904223u);
+}
+
+// ランダムな値を生成する関数
+float RandomRange(int2 minI, int2 maxI, inout uint seed)
+{
+    float min = heightMap[minI.x + minI.y * WORLD_SIZE];
+    float max = heightMap[maxI.x + maxI.y * WORLD_SIZE];
+
+    // シード値を更新
+    seed = UpdateSeed(seed);
+
+    // シード値を元に擬似乱数を生成
+    float random = (seed & 0x7fffffff) / 2147483648.0;
+
+    // minからmaxの範囲にスケーリング
+    return lerp(min, max, random);
+}
+
+[numthreads(8,8,8)]
+void MeshGenerate (uint3 id : SV_DispatchThreadID)
+{
+    int3 voxel = int3(id.x + VIEW_ORIGIN_X, id.y + VIEW_ORIGIN_Y, id.z + VIEW_ORIGIN_Z);
+    int index = voxel.x + voxel.y * WORLD_SIZE + voxel.z * WORLD_HEIGHT * WORLD_SIZE;
+
+    // ブロックが描画範囲でかつ、空気ブロックでない場合処理を行う
+    if (blocksID[index] != 0)
+    {
+        // 上下左右前後の6方向をチェック
+        int isTopNeedDraw = CheckIsAir(voxel + int3(0, 1, 0));
+        int isBottomNeedDraw = CheckIsAir(voxel + int3(0, -1, 0));
+        int isLeftNeedDraw = CheckIsAir(voxel + int3(-1, 0, 0));
+        int isRightNeedDraw = CheckIsAir(voxel + int3(1, 0, 0));
+        int isFrontNeedDraw = CheckIsAir(voxel + int3(0, 0, -1));
+        int isBackNeedDraw = CheckIsAir(voxel + int3(0, 0, 1));
+
+        // どれか一つでも空気ブロックがあれば描画対象とする
+        int isNeedDraw = isTopNeedDraw + isBottomNeedDraw + isLeftNeedDraw + isRightNeedDraw + isFrontNeedDraw + isBackNeedDraw;
+
+        int drawFaceAmount = 0;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 0) * isFrontNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 1) * isBackNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 2) * isLeftNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 3) * isRightNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 4) * isTopNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 5) * isBottomNeedDraw;
+
+        // 描画対象のブロック情報を格納
+        if (isNeedDraw > 0)
+        {
+            InterlockedAdd(counts[0], 1);
+
+            int thisVsIndex;
+            InterlockedAdd(counts[1], drawFaceAmount * 4, thisVsIndex);
+
+            int thisTrisIndex;
+            InterlockedAdd(counts[2], drawFaceAmount * 6, thisTrisIndex);
+
+            int vsIndex = thisVsIndex;
+            int trisIndex = thisTrisIndex;
+
+            int meshFaceCount = GetFaceCount(blocksID[index]);
+            int meshVsIndex = GetVsIndex(blocksID[index]);
+            int meshTrisIndex = GetTrisIndex(blocksID[index]);
+            
+            int totalFaceAmount = GetAmountOfFaces(blocksID[index], 0);
+            int faceType = 0;
+            for (int i = 0; i < meshFaceCount; i++)
+            {
+                int nowDrawing = 0;
+
+                if (faceType == 0) nowDrawing = isFrontNeedDraw;
+                else if (faceType == 1) nowDrawing = isBackNeedDraw;
+                else if (faceType == 2) nowDrawing = isLeftNeedDraw;
+                else if (faceType == 3) nowDrawing = isRightNeedDraw;
+                else if (faceType == 4) nowDrawing = isTopNeedDraw;
+                else if (faceType == 5) nowDrawing = isBottomNeedDraw;
+
+                if (i == totalFaceAmount - 1)
+                {
+                    faceType++;
+                    totalFaceAmount += GetAmountOfFaces(blocksID[index], faceType);
+                }
+
+                if (nowDrawing == 1)
+                {
+                    // ブロックの座標を変換
+                    float3 blockCoords = ToCoordsConvert(voxel);
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        meshVs[vsIndex] = 
+                        sourceMeshVs[meshVsIndex + i * 4 + j] + 
+                        float3(blockCoords.x, blockCoords.y, blockCoords.z);
+
+                        float2 uvDiff = GetUVFromID(blocksID[index]);
+
+                        meshUVs[vsIndex] = sourceMeshUVs[meshVsIndex + i * 4 + j] + uvDiff;
+
+                        vsIndex++;
+                    }
+
+                    for (int j = 0; j < 6; j++)
+                    {
+                        meshTris[trisIndex] = thisVsIndex + sourceMeshTris[meshTrisIndex + i * 6 + j];
+                        trisIndex++;
+                    }
+
+                    thisVsIndex += 4;
+                }
+            }
+        }
+    }
+}
+
+[numthreads(8,8,8)]
+void ThroughMeshGenerate (uint3 id : SV_DispatchThreadID)
+{
+    int3 voxel = int3(id.x + VIEW_ORIGIN_X, id.y + VIEW_ORIGIN_Y, id.z + VIEW_ORIGIN_Z);
+    int index = voxel.x + voxel.y * WORLD_SIZE + voxel.z * WORLD_HEIGHT * WORLD_SIZE;
+
+    // ブロックが描画範囲でかつ、空気ブロックでない場合処理を行う
+    if (blocksID[index] != 0)
+    {
+        // 上下左右前後の6方向をチェック
+        int isTopNeedDraw = CheckIsAirOrFluid(voxel + int3(0, 1, 0));
+        int isBottomNeedDraw = CheckIsAirOrFluid(voxel + int3(0, -1, 0));
+        int isLeftNeedDraw = CheckIsAirOrFluid(voxel + int3(-1, 0, 0));
+        int isRightNeedDraw = CheckIsAirOrFluid(voxel + int3(1, 0, 0));
+        int isFrontNeedDraw = CheckIsAirOrFluid(voxel + int3(0, 0, -1));
+        int isBackNeedDraw = CheckIsAirOrFluid(voxel + int3(0, 0, 1));
+
+        // どれか一つでも空気ブロックまたは流体ブロックがあれば描画対象とする
+        int isNeedDraw = isTopNeedDraw + isBottomNeedDraw + isLeftNeedDraw + isRightNeedDraw + isFrontNeedDraw + isBackNeedDraw;
+
+        int drawFaceAmount = 0;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 0) * isFrontNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 1) * isBackNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 2) * isLeftNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 3) * isRightNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 4) * isTopNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 5) * isBottomNeedDraw;
+
+        // 描画対象のブロック情報を格納
+        if (isNeedDraw > 0)
+        {
+            InterlockedAdd(counts[0], 1);
+
+            int thisVsIndex;
+            InterlockedAdd(counts[1], drawFaceAmount * 4, thisVsIndex);
+
+            int thisTrisIndex;
+            InterlockedAdd(counts[2], drawFaceAmount * 6, thisTrisIndex);
+
+            int vsIndex = thisVsIndex;
+            int trisIndex = thisTrisIndex;
+
+            int meshFaceCount = GetFaceCount(blocksID[index]);
+            int meshVsIndex = GetVsIndex(blocksID[index]);
+            int meshTrisIndex = GetTrisIndex(blocksID[index]);
+            
+            int totalFaceAmount = GetAmountOfFaces(blocksID[index], 0);
+            int faceType = 0;
+            for (int i = 0; i < meshFaceCount; i++)
+            {
+                int nowDrawing = 0;
+
+                if (faceType == 0) nowDrawing = isFrontNeedDraw;
+                else if (faceType == 1) nowDrawing = isBackNeedDraw;
+                else if (faceType == 2) nowDrawing = isLeftNeedDraw;
+                else if (faceType == 3) nowDrawing = isRightNeedDraw;
+                else if (faceType == 4) nowDrawing = isTopNeedDraw;
+                else if (faceType == 5) nowDrawing = isBottomNeedDraw;
+
+                if (i == totalFaceAmount - 1)
+                {
+                    faceType++;
+                    totalFaceAmount += GetAmountOfFaces(blocksID[index], faceType);
+                }
+
+                if (nowDrawing == 1)
+                {
+                    // ブロックの座標を変換
+                    float3 blockCoords = ToCoordsConvert(voxel);
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        meshVs[vsIndex] = 
+                        sourceMeshVs[meshVsIndex + i * 4 + j] + 
+                        float3(blockCoords.x, blockCoords.y, blockCoords.z);
+
+                        float2 uvDiff = GetUVFromID(blocksID[index]);
+
+                        meshUVs[vsIndex] = sourceMeshUVs[meshVsIndex + i * 4 + j] + uvDiff;
+
+                        vsIndex++;
+                    }
+
+                    for (int j = 0; j < 6; j++)
+                    {
+                        meshTris[trisIndex] = thisVsIndex + sourceMeshTris[meshTrisIndex + i * 6 + j];
+                        trisIndex++;
+                    }
+
+                    thisVsIndex += 4;
+                }
+            }
+        }
+    }
+}
+
+int TARGET_BLOCK_X;
+int TARGET_BLOCK_Y;
+int TARGET_BLOCK_Z;
+
+int GENERATE_BLOCK_ID;
+
+RWStructuredBuffer<int> targetBlockID;
+[numthreads(1,1,1)]
+void BlockUpdate (uint3 id : SV_DispatchThreadID)
+{
+    int index = TARGET_BLOCK_X + TARGET_BLOCK_Y * WORLD_SIZE + TARGET_BLOCK_Z * WORLD_HEIGHT * WORLD_SIZE;
+
+    if (throughBlocksID[index] == 0) // 空気ブロックの場合
+    {
+        if (IsThroughBlock(GENERATE_BLOCK_ID))
+        {
+            targetBlockID[0] = blocksID[index];
+            throughBlocksID[index] = GENERATE_BLOCK_ID;
+        }
+        else
+        {
+            targetBlockID[0] = blocksID[index];
+            blocksID[index] = GENERATE_BLOCK_ID;
+        }
+    }
+    else // 透明ブロックの場合
+    {
+        if (IsThroughBlock(GENERATE_BLOCK_ID)) // 透明ブロックを透明ブロックで置き換える場合
+        {
+            targetBlockID[0] = throughBlocksID[index];
+            if (throughBlocksID[index] == 6 && GENERATE_BLOCK_ID == 7) // 水ブロックを溶岩ブロックで置き換える場合
+            {
+                blocksID[index] = 8; // 黒曜石ブロック
+                throughBlocksID[index] = 0;
+            }
+            else if (throughBlocksID[index] == 7 && GENERATE_BLOCK_ID == 6) // 溶岩ブロックを水ブロックで置き換える場合
+            {
+                blocksID[index] = 8; // 黒曜石ブロック
+                throughBlocksID[index] = 0;
+            }
+            else
+            {
+                throughBlocksID[index] = GENERATE_BLOCK_ID;
+            }
+
+        }
+        else // 透明ブロックを不透明ブロックで置き換える場合
+        {
+            targetBlockID[0] = throughBlocksID[index];
+            blocksID[index] = GENERATE_BLOCK_ID;
+            throughBlocksID[index] = 0;
+        }
+    }
+}
+
+float RAY_SIZE;
+float RAY_ORIGIN_X;
+float RAY_ORIGIN_Y;
+float RAY_ORIGIN_Z;
+
+float RAY_DIRECTION_X;
+float RAY_DIRECTION_Y;
+float RAY_DIRECTION_Z;
+
+float RAY_LENGTH;
+
+RWStructuredBuffer<float4> raycastBlocks;
+
+[numthreads(8,1,1)]
+void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
+{
+    uint index = id.x;
+
+    float3 rayPos;
+    rayPos.x = RAY_ORIGIN_X + (RAY_DIRECTION_X * RAY_LENGTH) * ((float)index / (float)RAY_SIZE);
+    rayPos.y = RAY_ORIGIN_Y + (RAY_DIRECTION_Y * RAY_LENGTH) * ((float)index / (float)RAY_SIZE);
+    rayPos.z = RAY_ORIGIN_Z + (RAY_DIRECTION_Z * RAY_LENGTH) * ((float)index / (float)RAY_SIZE);
+
+    int3 blockPos = int3(rayPos);
+    float3 rayFloatPart = rayPos - float3(int3(rayPos));
+    
+    if (rayFloatPart.x >= 0.5) blockPos.x += 1;
+    if (rayFloatPart.y >= 0.5) blockPos.y += 1;
+    if (rayFloatPart.z >= 0.5) blockPos.z += 1;
+    if (rayFloatPart.x <= -0.5) blockPos.x -= 1;
+    if (rayFloatPart.y <= -0.5) blockPos.y -= 1;
+    if (rayFloatPart.z <= -0.5) blockPos.z -= 1;
+
+    raycastBlocks[index].x = blockPos.x;
+    raycastBlocks[index].y = blockPos.y;
+    raycastBlocks[index].z = blockPos.z;
+    raycastBlocks[index].w = blocksID[blockPos.x + blockPos.y * WORLD_SIZE + blockPos.z * WORLD_HEIGHT * WORLD_SIZE];
+}
+
+RWStructuredBuffer<float3> boxPos; // ボックスの底面の中心座標
+RWStructuredBuffer<float3> boxSize; // ボックスのサイズ
+
+// ヒットした面。ブロックの当たり優先度で決まる。
+RWStructuredBuffer<int> hitBlockType;
+
+[numthreads(1,1,1)]
+void HitBox (uint3 id : SV_DispatchThreadID)
+{
+    uint index = id.x;
+
+    // Originのブロック座標を取得
+    float3 boxOrigin = boxPos[index];
+    boxOrigin.x -= boxSize[index].x / 2;
+    boxOrigin.z -= boxSize[index].z / 2;
+
+    float3 boxOriginFloatPart = boxOrigin - float3(int3(boxOrigin));
+
+    int3 originBlock = int3(boxOrigin);
+    if (boxOriginFloatPart.x >= 0.5) originBlock.x += 1;
+    if (boxOriginFloatPart.y >= 0.5) originBlock.y += 1;
+    if (boxOriginFloatPart.z >= 0.5) originBlock.z += 1;
+    if (boxOriginFloatPart.x <= -0.5) originBlock.x -= 1;
+    if (boxOriginFloatPart.y <= -0.5) originBlock.y -= 1;
+    if (boxOriginFloatPart.z <= -0.5) originBlock.z -= 1;
+
+    // Oppositeのブロック座標を取得
+    float3 boxOpposite = boxPos[index];
+    boxOpposite.x += boxSize[index].x / 2;
+    boxOpposite.y += boxSize[index].y;
+    boxOpposite.z += boxSize[index].z / 2;
+
+    float3 boxOppositeFloatPart = boxOpposite - float3(int3(boxOpposite));
+
+    int3 oppositeBlock = int3(boxOpposite);
+    if (boxOppositeFloatPart.x >= 0.5) oppositeBlock.x += 1;
+    if (boxOppositeFloatPart.y >= 0.5) oppositeBlock.y += 1;
+    if (boxOppositeFloatPart.z >= 0.5) oppositeBlock.z += 1;
+    if (boxOppositeFloatPart.x <= -0.5) oppositeBlock.x -= 1;
+    if (boxOppositeFloatPart.y <= -0.5) oppositeBlock.y -= 1;
+    if (boxOppositeFloatPart.z <= -0.5) oppositeBlock.z -= 1;
+
+    int thisHitBoxType = 0;
+
+    // OriginとOppositeから当たる可能性があるブロックらに対して処理を行う
+    for (int i = originBlock.x; i < oppositeBlock.x + 1; i++)
+    {
+        for (int j = originBlock.y; j < oppositeBlock.y + 1; j++)
+        {
+            for (int k = originBlock.z; k < oppositeBlock.z + 1; k++)
+            {
+                int3 blockCoords = int3(i, j, k);
+                int3 blockPos = ToPosConvert(int3(i, j, k));
+
+                // ブロックがワールド範囲内かチェック
+                if (blockPos.x >= 0 && blockPos.x < WORLD_SIZE &&
+                    blockPos.y >= 0 && blockPos.y < WORLD_HEIGHT &&
+                    blockPos.z >= 0 && blockPos.z < WORLD_SIZE)
+                {
+                    // ブロックのIDを取得
+                    int blockID = blocksID[blockPos.x + blockPos.y * WORLD_SIZE + blockPos.z * WORLD_HEIGHT * WORLD_SIZE];
+
+                    // ブロックが空気ブロックでない場合処理を行う
+                    if (blockID != 0)
+                    {
+                        // ブロックのヒットボックスの種類を取得
+                        int hitboxType = GetHitboxType(blockID);
+
+                        // ブロックのヒットボックスのOriginとOppositeを取得
+                        float3 hitboxOrigin = GetHitboxOrigin(hitboxType, blockCoords);
+                        float3 hitboxOpposite = GetHitboxOpposite(hitboxType, blockCoords);
+
+                        if 
+                        (
+                            boxOrigin.x <= hitboxOpposite.x && boxOpposite.x >= hitboxOrigin.x &&
+                            boxOrigin.y <= hitboxOpposite.y && boxOpposite.y >= hitboxOrigin.y &&
+                            boxOrigin.z <= hitboxOpposite.z && boxOpposite.z >= hitboxOrigin.z
+                        ){
+                            if (GetHitboxPriority(blockID) > GetHitboxPriority(thisHitBoxType))
+                            {
+                                thisHitBoxType = blockID;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 結果を格納
+    hitBlockType[index] = thisHitBoxType;
+}
