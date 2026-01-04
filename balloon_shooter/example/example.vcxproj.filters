@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\scene_game_example">
+      <UniqueIdentifier>{2a39d565-7fca-40ca-937a-698d1bc0a6e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\window_game_example">
+      <UniqueIdentifier>{67f7eec3-a3de-4c45-a1fc-ceb006e611f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_game_example">
+      <UniqueIdentifier>{43b3712b-bdd6-4a92-b313-7fb95bd60871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\window_game_example">
+      <UniqueIdentifier>{b1b76181-f494-4692-94f5-5663495c3bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\feature">
+      <UniqueIdentifier>{02a6059b-b57d-467f-9376-1c44798b9846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\feature">
+      <UniqueIdentifier>{08e21375-cfc5-4ffb-a41f-d40083f8c3a6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\entry.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene_game_example\asset_group.cpp">
+      <Filter>ソース ファイル\scene_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene_game_example\entities_factory.cpp">
+      <Filter>ソース ファイル\scene_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene_game_example\scene.cpp">
+      <Filter>ソース ファイル\scene_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene_game_example\system_scheduler.cpp">
+      <Filter>ソース ファイル\scene_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window_game_example\event_factory.cpp">
+      <Filter>ソース ファイル\window_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window_game_example\facade_factory.cpp">
+      <Filter>ソース ファイル\window_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window_game_example\monitor_keyboard.cpp">
+      <Filter>ソース ファイル\window_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window_game_example\monitor_mouse.cpp">
+      <Filter>ソース ファイル\window_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window_game_example\window.cpp">
+      <Filter>ソース ファイル\window_game_example</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_controller.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\system_controller.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\pch.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene_game_example\asset_group.h">
+      <Filter>ヘッダー ファイル\scene_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene_game_example\entities_factory.h">
+      <Filter>ヘッダー ファイル\scene_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene_game_example\scene.h">
+      <Filter>ヘッダー ファイル\scene_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene_game_example\system_scheduler.h">
+      <Filter>ヘッダー ファイル\scene_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window_game_example\event_factory.h">
+      <Filter>ヘッダー ファイル\window_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window_game_example\facade_factory.h">
+      <Filter>ヘッダー ファイル\window_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window_game_example\monitor_keyboard.h">
+      <Filter>ヘッダー ファイル\window_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window_game_example\monitor_mouse.h">
+      <Filter>ヘッダー ファイル\window_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window_game_example\window.h">
+      <Filter>ヘッダー ファイル\window_game_example</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mode.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_controller.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\system_controller.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+</Project>

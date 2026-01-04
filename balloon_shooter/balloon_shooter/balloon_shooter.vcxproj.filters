@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\scene">
+      <UniqueIdentifier>{2a39d565-7fca-40ca-937a-698d1bc0a6e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\window">
+      <UniqueIdentifier>{67f7eec3-a3de-4c45-a1fc-ceb006e611f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene">
+      <UniqueIdentifier>{43b3712b-bdd6-4a92-b313-7fb95bd60871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\window">
+      <UniqueIdentifier>{b1b76181-f494-4692-94f5-5663495c3bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\feature">
+      <UniqueIdentifier>{8a4d1952-59d4-4ef9-9940-605a4712e2f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\feature">
+      <UniqueIdentifier>{71d10995-bc8a-44ba-8a50-da1d23737fc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\feature\interfaces">
+      <UniqueIdentifier>{4d58094d-b3f3-487f-a3f7-717e002c6f02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\entry.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\play_asset_group.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\play_entities_factory.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\play_scene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\play_system_scheduler.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\balloon_shooter_event_factory.cpp">
+      <Filter>ソース ファイル\window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\balloon_shooter_facade_factory.cpp">
+      <Filter>ソース ファイル\window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\balloon_shooter_monitor_keyboard.cpp">
+      <Filter>ソース ファイル\window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\balloon_shooter_monitor_mouse.cpp">
+      <Filter>ソース ファイル\window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\balloon_shooter_window.cpp">
+      <Filter>ソース ファイル\window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\game_state_loading.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\game_state_playing.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\id_factory_game_state.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\shared_game_state.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\system_ui_controller.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_player.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_player.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\system_player.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_map.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_map.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_balloon.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\system_balloon_controller.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_balloons.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\ui_image.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_ui_player.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_ui_player.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\system_ui_bar.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\ui_bar.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\title_asset_group.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\title_entities_factory.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\title_scene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\title_system_scheduler.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_ui_title.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_ui_title.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\system_ui_button.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\ui_button.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\game_state_title.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\game_state_exit.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_ui_load.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\load_asset_group.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\load_entities_factory.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\load_scene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\load_system_scheduler.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_ui_load.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\component_ui_clear.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\game_state_clear.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\prefab_ui_clear.cpp">
+      <Filter>ソース ファイル\feature</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\pch.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\play_asset_group.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\play_entities_factory.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\play_scene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\play_system_scheduler.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window\balloon_shooter_event_factory.h">
+      <Filter>ヘッダー ファイル\window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window\balloon_shooter_facade_factory.h">
+      <Filter>ヘッダー ファイル\window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window\balloon_shooter_monitor_keyboard.h">
+      <Filter>ヘッダー ファイル\window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window\balloon_shooter_monitor_mouse.h">
+      <Filter>ヘッダー ファイル\window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window\balloon_shooter_window.h">
+      <Filter>ヘッダー ファイル\window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\game_state.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\shared_game_state.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\game_state_loading.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\game_state_playing.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\id_factory_game_state.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\shared_game_state.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\system_ui_controller.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\component_player.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_player.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_player.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\system_player.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\component_map.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_map.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_map.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\component_balloon.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_balloon.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\system_balloon_controller.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_balloons.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\ui_bar.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\ui_element.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\ui_image.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_ui_player.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_ui_player.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\ui_button.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\interfaces\ui_image.h">
+      <Filter>ヘッダー ファイル\feature\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\system_ui_bar.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\ui_bar.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\title_asset_group.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\title_entities_factory.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\title_scene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\title_system_scheduler.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_ui_title.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_ui_title.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\system_ui_button.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\ui_button.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\game_state_title.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\game_state_exit.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_ui_load.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\load_asset_group.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\load_entities_factory.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\load_scene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scene\load_system_scheduler.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_ui_load.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\component_ui_clear.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\game_state_clear.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="include\feature\prefab_ui_clear.h">
+      <Filter>ヘッダー ファイル\feature</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+</Project>
