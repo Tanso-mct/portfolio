@@ -1,0 +1,1 @@
+﻿#include "mono_window_service/src/pch.h"
