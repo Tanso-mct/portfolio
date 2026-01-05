@@ -1,9 +1,12 @@
 # Portfolio
 
 ## ポートフォリオの閲覧方法
-[ポートフォリオ](https://speakerdeck.com/tanso/potohuorio)になります。
+[ポートフォリオ](https://speakerdeck.com/tanso/zhui-ye-tai-cheng-potohuorio)になります。
 SpeakerDeckにアップロードしているため、このリンクでダウンロードせずに閲覧できます。
 また、本リポジトリにもPDF形式であります。
+
+## 作品プレイ動画
+- [作品プレイ動画](https://youtu.be/LQiFqc4XcfU)にアクセスすることで、作品のプレイ動画をご覧いただけます。
 
 ## このリポジドリは以下を含んでいます。
 - [ポートフォリオ（PDF形式）](ポートフォリオ.pdf)
