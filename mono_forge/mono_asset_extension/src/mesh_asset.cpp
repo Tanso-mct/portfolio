@@ -222,9 +222,6 @@ std::unique_ptr<asset_loader::Asset> MeshAssetLoader::Load(
         asset = MeshAsset::CreateInstance<MeshAsset>(
             mesh_source_data->GetServiceProxy().Clone(), vertex_data, vertex_count, index_data, index_count);
         assert(asset != nullptr && "Failed to create the mesh asset");
-
-        // Set asset name
-        asset->SetName("Geometry");
     }
     else if(mesh_source_data->HasMFMData())
     {
@@ -272,15 +269,25 @@ std::unique_ptr<asset_loader::Asset> MeshAssetLoader::Load(
             mesh_source_data->GetServiceProxy().Clone(),
             vertex_datas, vertex_counts, index_datas, index_counts);
 
-        // Get file name from file path
-        std::string file_name = utility_header::GetFileNameFromPath(mesh_source_data->GetFilePath());
-
-        // Set asset name
-        asset->SetName(file_name);
+        // Set asset file path
+        asset->SetFilePath(std::string(mesh_source_data->GetFilePath()));
     }
     else
     {
         assert(false && "No valid mesh data found in source data");
+    }
+
+    // Set asset name
+    if (!mesh_source_data->GetName().empty())
+    {
+        // Use name from source data if set
+        asset->SetName(mesh_source_data->GetName().data());
+    }
+    else
+    {
+        // Get file name from file path
+        std::string file_name = utility_header::GetFileNameFromPath(mesh_source_data->GetFilePath());
+        asset->SetName(file_name);
     }
 
     return asset; // Return the created asset

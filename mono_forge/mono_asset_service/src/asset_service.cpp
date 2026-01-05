@@ -1,4 +1,4 @@
-#include "mono_asset_service/src/pch.h"
+﻿#include "mono_asset_service/src/pch.h"
 #include "mono_asset_service/include/asset_service.h"
 
 #include "utility_header/logger.h"
@@ -283,9 +283,6 @@ const asset_loader::Asset& AssetService::GetAsset(asset_loader::AssetHandleID id
 {
     assert(IsSetup() && "AssetService is not set up.");
 
-    // Acquire shared lock for thread-safe access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-    
     // Pointer to the asset to return
     asset_loader::Asset* asset_ptr = nullptr;
 
@@ -302,9 +299,6 @@ bool AssetService::IsAssetLoaded(asset_loader::AssetHandleID id) const
 {
     assert(IsSetup() && "AssetService is not set up.");
 
-    // Acquire shared lock for thread-safe access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
     bool is_loaded = false;
 
     asset_manager_->WithLock([&](asset_loader::AssetManager& asset_manager)
@@ -320,9 +314,6 @@ std::vector<asset_loader::AssetHandleID> AssetService::GetLoadedAssetIDs() const
 {
     assert(IsSetup() && "AssetService is not set up.");
 
-    // Acquire shared lock for thread-safe access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
     std::vector<asset_loader::AssetHandleID> loaded_ids;
 
     asset_manager_->WithLock([&](asset_loader::AssetManager& asset_manager)
@@ -332,6 +323,18 @@ std::vector<asset_loader::AssetHandleID> AssetService::GetLoadedAssetIDs() const
     });
 
     return loaded_ids;
+}
+
+std::unordered_map<std::string, asset_loader::AssetHandleID>& AssetService::GetLoadedAssetNameToHandleIDMap()
+{
+    assert(IsSetup() && "AssetService is not set up.");
+    return loaded_asset_name_to_handle_id_map_;
+}
+
+const std::unordered_map<std::string, asset_loader::AssetHandleID>& AssetService::GetLoadedAssetNameToHandleIDMap() const
+{
+    assert(IsSetup() && "AssetService is not set up.");
+    return loaded_asset_name_to_handle_id_map_;
 }
 
 } // namespace mono_asset_service

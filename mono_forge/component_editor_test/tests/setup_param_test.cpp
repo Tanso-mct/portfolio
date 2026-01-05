@@ -30,6 +30,17 @@ component_editor::SetupParamFieldTypeRegistrar<int> g_string_field_type_registra
         std::getline(std::cin, new_value);
         value = new_value;
         return true;
+    },
+    [](const std::any& field_value, std::string_view field_name, int num) -> nlohmann::json
+    {
+        return std::any_cast<const std::string&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, int num) -> std::any
+    {
+        std::string value;
+        assert(json.contains(field_name.data()) && "JSON does not contain the field name.");
+        value = json[field_name.data()].get<std::string>();
+        return value;
     });
 
 component_editor::SetupParamFieldTypeRegistrar<int> g_bool_field_type_registrar(
@@ -47,6 +58,16 @@ component_editor::SetupParamFieldTypeRegistrar<int> g_bool_field_type_registrar(
         std::cin >> new_value;
         value = new_value;
         return true;
+    },
+    [](const std::any& field_value, std::string_view field_name, int num) -> nlohmann::json
+    {
+        return std::any_cast<const bool&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, int num) -> std::any
+    {
+        bool value = false;
+        value = json[field_name.data()].get<bool>();
+        return value;
     });
 
 component_editor::SetupParamFieldValueSetter g_setup_param_field_value_setter;
@@ -339,7 +360,7 @@ TEST(SetupParam, FieldTypeRegistry)
         ASSERT_NE(create_func, nullptr);
 
         // Create std::any object from test value
-        std::any any_value = create_func(reinterpret_cast<const uint8_t*>(&test_value), 0);
+		std::any any_value = create_func(reinterpret_cast<const uint8_t*>(&test_value), 0);
         ASSERT_EQ(std::any_cast<std::string>(any_value), test_value);
 
         // Get edit function for string field type
@@ -352,6 +373,24 @@ TEST(SetupParam, FieldTypeRegistry)
             std::string edited_value = std::any_cast<std::string>(any_value);
             std::cout << "Edited string value: " << edited_value << std::endl;
         }
+
+        // Get export function for string field type
+        const auto& export_func = registry.GetSetupParamFieldExportFunc("std::string");
+        ASSERT_NE(export_func, nullptr);
+
+        // Export the std::any object to JSON
+        nlohmann::json field_json = export_func(any_value, "test_string_field", 0);
+        nlohmann::json json;
+        json["test_string_field"] = field_json;
+        std::cout << "Exported JSON: " << json.dump() << std::endl;
+
+        // Get import function for string field type
+        const auto& import_func = registry.GetSetupParamFieldImportFunc("std::string");
+        ASSERT_NE(import_func, nullptr);
+
+        // Import the std::any object from JSON
+        std::any imported_value = import_func("test_string_field", json, 0);
+        ASSERT_EQ(std::any_cast<std::string>(imported_value), std::any_cast<std::string>(any_value));
     }
 
     // Bool field type
@@ -363,7 +402,7 @@ TEST(SetupParam, FieldTypeRegistry)
         ASSERT_NE(create_func, nullptr);
 
         // Create std::any object from test value
-        std::any any_value = create_func(reinterpret_cast<const uint8_t*>(&test_value), 0);
+		std::any any_value = create_func(reinterpret_cast<const uint8_t*>(&test_value), 0);
         ASSERT_EQ(std::any_cast<bool>(any_value), test_value);
 
         // Get edit function for bool field type
@@ -376,5 +415,23 @@ TEST(SetupParam, FieldTypeRegistry)
             bool edited_value = std::any_cast<bool>(any_value);
             std::cout << "Edited bool value: " << edited_value << std::endl;
         }
+
+        // Get export function for bool field type
+        const auto& export_func = registry.GetSetupParamFieldExportFunc("bool");
+        ASSERT_NE(export_func, nullptr);
+
+        // Export the std::any object to JSON
+        nlohmann::json field_json = export_func(any_value, "test_bool_field", 0);
+        nlohmann::json json;
+        json["test_bool_field"] = field_json;
+        std::cout << "Exported JSON: " << json.dump() << std::endl;
+
+        // Get import function for bool field type
+        const auto& import_func = registry.GetSetupParamFieldImportFunc("bool");
+        ASSERT_NE(import_func, nullptr);
+
+        // Import the std::any object from JSON
+        std::any imported_value = import_func("test_bool_field", json, 0);
+        ASSERT_EQ(std::any_cast<bool>(imported_value), std::any_cast<bool>(any_value));
     }
 }

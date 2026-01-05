@@ -1,0 +1,144 @@
+{
+    "materials": [
+        {
+            "LambertMaterial": {
+                "albedo_source": 0,
+                "albedo_texture_asset_name": "Empty",
+                "ao_source": 0,
+                "ao_texture_asset_name": "Empty",
+                "base_color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "debug_name_prefix": [
+                    85,
+                    110,
+                    110,
+                    97,
+                    109,
+                    101,
+                    100
+                ],
+                "emission_color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "emission_source": 0,
+                "emission_texture_asset_name": "Empty",
+                "normal_source": 0,
+                "normal_texture_asset_name": "Empty"
+            }
+        },
+        {
+            "PhongMaterial": {
+                "albedo_source": 1,
+                "albedo_texture_asset_name": "marble_bust_01_diff_1k",
+                "ao_source": 1,
+                "ao_texture_asset_name": "marble_bust_01_ao_1k",
+                "base_color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "debug_name_prefix": [
+                    85,
+                    110,
+                    110,
+                    97,
+                    109,
+                    101,
+                    100
+                ],
+                "emission_color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "emission_source": 0,
+                "emission_texture_asset_name": "Empty",
+                "metalness_source": 0,
+                "metalness_texture_asset_name": "marble_bust_01_rough_1k",
+                "metalness_value": 0.0,
+                "normal_source": 1,
+                "normal_texture_asset_name": "marble_bust_01_nor_dx_1k",
+                "roughness_source": 1,
+                "roughness_texture_asset_name": "Empty",
+                "roughness_value": 1.0,
+                "specular_source": 0,
+                "specular_texture_asset_name": "Empty"
+            }
+        },
+        {
+            "LambertMaterial": {
+                "albedo_source": 0,
+                "albedo_texture_asset_name": "Empty",
+                "ao_source": 0,
+                "ao_texture_asset_name": "Empty",
+                "base_color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "debug_name_prefix": [
+                    85,
+                    110,
+                    110,
+                    97,
+                    109,
+                    101,
+                    100
+                ],
+                "emission_color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "emission_source": 0,
+                "emission_texture_asset_name": "Empty",
+                "normal_source": 0,
+                "normal_texture_asset_name": "Empty"
+            }
+        },
+        {
+            "LambertMaterial": {
+                "albedo_source": 1,
+                "albedo_texture_asset_name": "sofa_albedo",
+                "ao_source": 0,
+                "ao_texture_asset_name": "Empty",
+                "base_color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "debug_name_prefix": [
+                    85,
+                    110,
+                    110,
+                    97,
+                    109,
+                    101,
+                    100
+                ],
+                "emission_color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "emission_source": 0,
+                "emission_texture_asset_name": "Empty",
+                "normal_source": 0,
+                "normal_texture_asset_name": "Empty"
+            }
+        }
+    ]
+}

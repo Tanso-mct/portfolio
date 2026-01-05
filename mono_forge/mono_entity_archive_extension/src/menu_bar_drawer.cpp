@@ -7,6 +7,8 @@ namespace mono_entity_archive_extension
 void MenuBarDrawer::ResetRequests()
 {
     quit_requested_ = false;
+    save_requested_ = false;
+    project_set_requested_ = false;
     show_hierarchy_requested_ = false;
     show_inspector_requested_ = false;
     show_asset_browser_requested_ = false;
@@ -26,7 +28,9 @@ render_graph::ImguiPass::DrawFunc MenuBarDrawer::CreateDrawFunc()
         {
             if (ImGui::BeginMenu("File"))
             {
+                save_requested_ = ImGui::MenuItem("Save");
                 quit_requested_ = ImGui::MenuItem("Quit");
+
                 ImGui::EndMenu();
             }
 

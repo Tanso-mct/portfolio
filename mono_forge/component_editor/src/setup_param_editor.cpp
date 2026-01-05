@@ -6,7 +6,7 @@ namespace component_editor
 
 bool SetupParamFieldValueSetter::SetFieldValue(
     ecs::Component::SetupParam* setup_param,
-    std::string_view field_type, size_t field_offset, std::any new_value)
+    std::string_view field_type, size_t field_offset, std::any new_value) const
 {
     // Find the set function for the field type
     auto it = set_func_map_.find(std::string(field_type));
@@ -70,6 +70,15 @@ void SetupParamEditor::Edit(
     edited_info.entity = entity;
     edited_info.component_id = component_id;
     edited_infos_.push_back(edited_info);
+}
+
+bool SetupParamEditor::SetFieldValue(
+    ecs::Component::SetupParam* setup_param,
+    std::string_view field_type, size_t field_offset, std::any new_value) const
+{
+    bool success = field_value_setter_.SetFieldValue(
+        setup_param, field_type, field_offset, new_value);
+    return success;
 }
 
 } // namespace component_editor

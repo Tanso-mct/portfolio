@@ -27,6 +27,18 @@ material_editor::SetupParamEditorRegistrar<int> g_test_material_editor_registrar
         std::cout << "Creating test material" << std::endl;
         // Perform creation logic here
         return false; // Indicate not created
+    },
+    [](const material_editor::SetupParamWrapper* setup_param, int num) -> nlohmann::json
+    {
+        std::cout << "Exporting test material setup param." << std::endl;
+        // Perform export logic here
+        return nlohmann::json(); // Return empty JSON
+    },
+    [](const nlohmann::json& json, int num) -> bool
+    {
+        std::cout << "Importing test material setup param." << std::endl;
+        // Perform import logic here
+        return false; // Indicate not imported
     });
 
 } // namespace edit_func_test
@@ -73,4 +85,32 @@ TEST(EditFunc, Call)
 
     // Verify the create function indicates not created
     ASSERT_EQ(created, false);
+
+    // Get the setup param export function for the test material type handle ID
+    material_editor::SetupParamExportFunc<int> export_func
+        = edit_func_test::g_setup_param_editor_registry.GetSetupParamExporter(
+            edit_func_test::TEST_MATERIAL_TYPE_HANDLE_ID);
+
+    // Verify the export function is valid
+    ASSERT_NE(export_func, nullptr);
+
+    // Call the export function
+    nlohmann::json exported_json = export_func(&test_setup_param_wrapper, 0);
+
+    // Verify the exported JSON is empty
+    ASSERT_TRUE(exported_json.empty());
+
+    // Get the setup param import function for the test material type handle ID
+    material_editor::MaterialImportFunc<int> import_func
+        = edit_func_test::g_setup_param_editor_registry.GetSetupParamImporter(
+            edit_func_test::TEST_MATERIAL_TYPE_HANDLE_ID);
+
+    // Verify the import function is valid
+    ASSERT_NE(import_func, nullptr);
+
+    // Call the import function
+    bool imported = import_func(nlohmann::json(), 0);
+
+    // Verify the import function indicates not imported
+    ASSERT_EQ(imported, false);
 }

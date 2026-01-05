@@ -1,5 +1,5 @@
-#include "component_editor_test/pch.h"
-#include "component_editor_test/tests/test_transform_component.h"
+#include "mono_entity_archive_service_test/pch.h"
+#include "mono_entity_archive_service_test/tests/test_transform_component.h"
 
 namespace component_editor_test
 {
@@ -57,6 +57,12 @@ bool TestTransformComponentAdder::Add(
 
     // Add component to the world
     return world.AddComponent<TestTransformComponent>(entity, TestTransformComponentHandle::ID(), std::move(setup_param));
+}
+
+std::unique_ptr<ecs::Component::SetupParam> TestTransformComponentAdder::GetSetupParam(
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    return std::make_unique<TestTransformComponent::SetupParam>();
 }
 
 } // namespace component_editor_test

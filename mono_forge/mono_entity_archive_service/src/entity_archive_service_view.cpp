@@ -21,7 +21,7 @@ bool EntityArchiveServiceView::CheckIsEditable(ecs::Entity entity, ecs::Componen
     return entity_archive_service_api.CheckIsEditable(entity, component_id);
 }
 
-utility_header::ConstSharedLockedValue<component_editor::FieldMap> EntityArchiveServiceView::GetComponentFieldMap(
+const component_editor::FieldMap& EntityArchiveServiceView::GetComponentFieldMap(
     ecs::ComponentID component_id) const
 {
     // Get entity archive service API
@@ -47,7 +47,7 @@ const uint8_t* EntityArchiveServiceView::GetSetupParamField(
     return entity_archive_service_api.GetSetupParamField(entity, component_id, field_name);
 }
 
-utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> EntityArchiveServiceView::GetSetupParam(
+const ecs::Component::SetupParam& EntityArchiveServiceView::GetSetupParam(
     ecs::Entity entity, ecs::ComponentID component_id) const
 {
     // Get entity archive service API
@@ -60,7 +60,7 @@ utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> EntityArchive
     return entity_archive_service_api.GetSetupParam(entity, component_id);
 }
 
-utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> EntityArchiveServiceView::GetComponentNameMap() const
+const component_editor::ComponentNameMap& EntityArchiveServiceView::GetComponentNameMap() const
 {
     // Get entity archive service API
     static_assert(
@@ -72,7 +72,7 @@ utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> Entit
     return entity_archive_service_api.GetComponentNameMap();
 }
 
-utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> EntityArchiveServiceView::GetComponentAdderMap() const
+const component_editor::ComponentAdderMap& EntityArchiveServiceView::GetComponentAdderMap() const
 {
     // Get entity archive service API
     static_assert(
@@ -84,7 +84,7 @@ utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> Enti
     return entity_archive_service_api.GetComponentAdderMap();
 }
 
-utility_header::ConstSharedLockedValue<ComponentSetupParamFieldTypeRegistry> EntityArchiveServiceView::GetSetupParamFieldTypeRegistry() const
+const ComponentSetupParamFieldTypeRegistry& EntityArchiveServiceView::GetSetupParamFieldTypeRegistry() const
 {
     // Get entity archive service API
     static_assert(
@@ -120,6 +120,18 @@ std::vector<component_editor::EditedInfo> EntityArchiveServiceView::GetEditedInf
     return entity_archive_service_api.GetEditedInfos();
 }
 
+const component_editor::SetupParamEditor& EntityArchiveServiceView::GetSetupParamEditor() const
+{
+    // Get entity archive service API
+    static_assert(
+        std::is_base_of<mono_service::ServiceAPI, EntityArchiveServiceAPI>::value,
+        "EntityArchiveServiceAPI must be derived from ServiceAPI.");
+    const EntityArchiveServiceAPI& entity_archive_service_api = 
+        dynamic_cast<const EntityArchiveServiceAPI&>(service_api_);
+
+    return entity_archive_service_api.GetSetupParamEditor();
+}
+
 const material_editor::SetupParamWrapper* EntityArchiveServiceView::GetMaterialSetupParam(
     render_graph::MaterialHandle* material_handle) const
 {
@@ -143,7 +155,7 @@ const MaterialSetupParamEditFunc& EntityArchiveServiceView::GetMaterialSetupPara
     const EntityArchiveServiceAPI& entity_archive_service_api = 
         dynamic_cast<const EntityArchiveServiceAPI&>(service_api_);
 
-    return entity_archive_service_api.GetMaterialSetupParamEditorRegistry()().GetSetupParamEditor(material_type_handle_id);
+    return entity_archive_service_api.GetMaterialSetupParamEditorRegistry().GetSetupParamEditor(material_type_handle_id);
 }
 
 const MaterialSetupParamCreateFunc& EntityArchiveServiceView::GetMaterialSetupParamCreateFunc(
@@ -156,10 +168,10 @@ const MaterialSetupParamCreateFunc& EntityArchiveServiceView::GetMaterialSetupPa
     const EntityArchiveServiceAPI& entity_archive_service_api = 
         dynamic_cast<const EntityArchiveServiceAPI&>(service_api_);
 
-    return entity_archive_service_api.GetMaterialSetupParamEditorRegistry()().GetSetupParamCreator(material_type_handle_id);
+    return entity_archive_service_api.GetMaterialSetupParamEditorRegistry().GetSetupParamCreator(material_type_handle_id);
 }
 
-utility_header::ConstSharedLockedValue<MaterialSetupParamEditorRegistry> 
+const MaterialSetupParamEditorRegistry&
     EntityArchiveServiceView::GetMaterialSetupParamEditorRegistry() const
 {
     // Get entity archive service API

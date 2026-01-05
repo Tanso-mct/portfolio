@@ -60,6 +60,27 @@ bool SetupParamManager::ContainSetupParam(ecs::Entity entity, ecs::ComponentID c
     return component_it != component_map.end();
 }
 
+std::vector<ecs::ComponentID> SetupParamManager::GetComponentIDs(ecs::Entity entity) const
+{
+    assert(entity.IsValid() && "Entity is not valid");
+
+    std::vector<ecs::ComponentID> component_ids;
+
+    // Check if the entity exists in the map
+    auto entity_it = entity_setup_param_map_.find(entity);
+    if (entity_it == entity_setup_param_map_.end())
+        return component_ids; // Return empty vector if entity not found
+
+    // Get the component setup param map for the entity
+    const ComponentSetupParamMap& component_map = entity_it->second;
+
+    // Collect all component IDs
+    for (const auto& pair : component_map)
+        component_ids.push_back(pair.first);
+
+    return component_ids;
+}
+
 void SetupParamAdder::AddSetupParam(
     ecs::Entity entity, ecs::ComponentID component_id, 
     std::unique_ptr<ecs::Component::SetupParam> setup_param)

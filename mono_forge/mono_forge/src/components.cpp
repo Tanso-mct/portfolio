@@ -46,6 +46,7 @@
 #include "mono_entity_archive_extension/include/transform_manipulator_ui_component.h"
 #include "mono_entity_archive_extension/include/menu_bar_ui_component.h"
 #include "mono_entity_archive_extension/include/material_editor_ui_component.h"
+#include "mono_entity_archive_extension/include/project_io_component.h"
 
 //COMPONENTS_INCLUDE_END//
 
@@ -214,6 +215,15 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_bool_field_
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        return std::any_cast<const bool&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        bool value = json.get<bool>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_int_field_type_registrar(
@@ -231,6 +241,15 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_int_field_t
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        return std::any_cast<const int&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        int value = json.get<int>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_float_field_type_registrar(
@@ -248,6 +267,15 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_float_field
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        return std::any_cast<const float&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        float value = json.get<float>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_string_field_type_registrar(
@@ -274,6 +302,15 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_string_fiel
         }
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        return std::any_cast<const std::string&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        std::string value = json.get<std::string>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_uint64_field_type_registrar(
@@ -291,6 +328,15 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_uint64_fiel
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        return std::any_cast<const uint64_t&>(field_value);
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        uint64_t value = json.get<uint64_t>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_xmfloat3_field_type_registrar(
@@ -308,6 +354,23 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_xmfloat3_fi
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        const DirectX::XMFLOAT3& casted_value = std::any_cast<const DirectX::XMFLOAT3&>(field_value);
+        nlohmann::json json = nlohmann::json::array();
+        json.push_back(casted_value.x);
+        json.push_back(casted_value.y);
+        json.push_back(casted_value.z);
+        return json;
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        DirectX::XMFLOAT3 value;
+        value.x = json[0].get<float>();
+        value.y = json[1].get<float>();
+        value.z = json[2].get<float>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_xmfloat4_field_type_registrar(
@@ -325,6 +388,25 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_xmfloat4_fi
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        const DirectX::XMFLOAT4& casted_value = std::any_cast<const DirectX::XMFLOAT4&>(field_value);
+        nlohmann::json json = nlohmann::json::array();
+        json.push_back(casted_value.x);
+        json.push_back(casted_value.y);
+        json.push_back(casted_value.z);
+        json.push_back(casted_value.w);
+        return json;
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        DirectX::XMFLOAT4 value;
+        value.x = json[0].get<float>();
+        value.y = json[1].get<float>();
+        value.z = json[2].get<float>();
+        value.w = json[3].get<float>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_xmfloat4_color_field_type_registrar(
@@ -342,6 +424,25 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_xmfloat4_co
             return true; // Edited
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        const DirectX::XMFLOAT4& casted_value = std::any_cast<const DirectX::XMFLOAT4&>(field_value);
+        nlohmann::json json = nlohmann::json::array();
+        json.push_back(casted_value.x);
+        json.push_back(casted_value.y);
+        json.push_back(casted_value.z);
+        json.push_back(casted_value.w);
+        return json;
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        DirectX::XMFLOAT4 value;
+        value.x = json[0].get<float>();
+        value.y = json[1].get<float>();
+        value.z = json[2].get<float>();
+        value.w = json[3].get<float>();
+        return value;
     });
 
 mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_mesh_set_field_type_registrar(
@@ -376,8 +477,8 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_mesh_set_fi
         std::vector<asset_loader::AssetHandleID> loaded_asset_ids = asset_service_view_ptr->GetLoadedAssetIDs();
 
         // Create names
-        std::string custom_mesh_field_name = std::string(field_name) + " (Click to select mesh asset)";
-        std::string custom_material_field_name = std::string(field_name) + " (Click to select material)";
+        std::string custom_mesh_field_name = "mesh (Click to select mesh asset)";
+        std::string custom_material_field_name = "material (Click to select material)";
         std::string mesh_popup_name = std::string(field_name) + "mesh_popup";
         std::string material_popup_name = std::string(field_name) + "material_popup";
 
@@ -457,6 +558,17 @@ mono_entity_archive_service::ComponentSetupParamFieldTypeRegistrar g_mesh_set_fi
         }
 
         return false; // Not edited
+    },
+    [](const std::any& field_value, std::string_view field_name, mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        const mono_graphics_extension::MeshSet& casted_value = std::any_cast<const mono_graphics_extension::MeshSet&>(field_value);
+        nlohmann::json json;
+        return json;
+    },
+    [](std::string_view field_name, const nlohmann::json& json, mono_service::ServiceProxyManager& service_proxy_manager) -> std::any
+    {
+        mono_graphics_extension::MeshSet value;
+        return value;
     });
 
 //SETUP_PARAM_FIELD_TYPE_REGISTRAR_DEFINE_END//
@@ -690,6 +802,13 @@ ecs::ComponentDescriptorRegistrar<
     mono_entity_archive_extension::ComponentAllocatorFactory,
     mono_entity_archive_extension::MaterialEditorUIComponentHandle> g_material_editor_ui_component_descriptor_registrar(
         g_component_descriptor_registry, MAX_MATERIAL_EDITOR_UI_COMPONENT_COUNT);
+
+constexpr size_t MAX_PROJECT_IO_COMPONENT_COUNT = 1;
+ecs::ComponentDescriptorRegistrar<
+    mono_entity_archive_extension::ProjectIOComponent,
+    mono_entity_archive_extension::ComponentAllocatorFactory,
+    mono_entity_archive_extension::ProjectIOComponentHandle> g_project_io_component_descriptor_registrar(
+        g_component_descriptor_registry, MAX_PROJECT_IO_COMPONENT_COUNT);
 
 constexpr size_t MAX_DIRECTIONAL_LIGHT_COMPONENT_COUNT = 5;
 ecs::ComponentDescriptorRegistrar<

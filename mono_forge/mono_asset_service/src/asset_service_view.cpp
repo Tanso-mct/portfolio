@@ -42,4 +42,22 @@ std::vector<asset_loader::AssetHandleID> AssetServiceView::GetLoadedAssetIDs() c
     return asset_service_api.GetLoadedAssetIDs();
 }
 
+asset_loader::AssetHandleID AssetServiceView::GetAssetHandleIDByName(std::string_view asset_name) const
+{
+    static_assert(
+        std::is_base_of<mono_service::ServiceAPI, AssetServiceAPI>::value,
+        "AssetServiceAPI must be derived from ServiceAPI.");
+    const AssetServiceAPI& asset_service_api = dynamic_cast<const AssetServiceAPI&>(service_api_);
+
+    // Get asset name to handle ID map
+    const auto& name_to_handle_id_map = asset_service_api.GetLoadedAssetNameToHandleIDMap();
+
+    // Find the asset handle ID by asset name
+    auto it = name_to_handle_id_map.find(std::string(asset_name));
+    if (it != name_to_handle_id_map.end())
+        return it->second; // Found
+
+    return asset_loader::AssetHandleID(); // Not found
+}
+
 } // namespace mono_asset_service

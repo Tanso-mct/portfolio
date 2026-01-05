@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 
+#include "material_editor/include/json.hpp"
 #include "material_editor/include/dll_config.h"
 #include "material_editor/include/setup_param.h"
 
@@ -18,5 +19,15 @@ using SetupParamEditFunc
 // Type alias for material create function
 template <typename... Args>
 using MaterialCreateFunc = std::function<bool(Args...)>;
+
+// Type alias for setup param export function[]
+template <typename ...Args>
+using SetupParamExportFunc 
+    = std::function<nlohmann::json(const material_editor::SetupParamWrapper*, Args...)>;
+
+// Type alias for setup param import function
+template <typename ...Args>
+using MaterialImportFunc 
+    = std::function<bool(const nlohmann::json& json, Args... args)>;
 
 } // namespace material_editor

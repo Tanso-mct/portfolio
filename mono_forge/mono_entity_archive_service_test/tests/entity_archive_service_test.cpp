@@ -7,6 +7,7 @@
 #include "mono_entity_archive_service/include/entity_archive_service.h"
 #include "mono_entity_archive_service/include/entity_archive_service_command_list.h"
 #include "mono_entity_archive_service/include/entity_archive_service_view.h"
+#include "mono_entity_archive_service/include/export_config.h"
 
 #include "mono_entity_archive_service_test/tests/component_reflection.h"
 #include "mono_entity_archive_service_test/tests/test_meta_component.h"
@@ -58,6 +59,10 @@ TEST(EntityArchiveServiceView, Import)
         // Copy component field value setter
         entity_archive_service_setup_param.setup_param_field_value_setter
             = component_editor_test::g_setup_param_field_value_setter;
+
+        // Copy setup param field type registry
+        entity_archive_service_setup_param.setup_param_field_type_registry_
+            = component_editor_test::g_setup_param_field_type_registry;
 
         result = mono_service::ImportService<
             mono_entity_archive_service::EntityArchiveService,
@@ -127,6 +132,10 @@ TEST(EntityArchiveServiceView, Edit)
         // Copy component field value setter
         entity_archive_service_setup_param.setup_param_field_value_setter
             = component_editor_test::g_setup_param_field_value_setter;
+
+        // Copy setup param field type registry
+        entity_archive_service_setup_param.setup_param_field_type_registry_
+            = component_editor_test::g_setup_param_field_type_registry;
 
         result = mono_service::ImportService<
             mono_entity_archive_service::EntityArchiveService,
@@ -219,12 +228,12 @@ TEST(EntityArchiveServiceView, Edit)
 
         // Get and verify test meta component setup param
         {
-            utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> setup_param = 
+            const ecs::Component::SetupParam& setup_param = 
                 entity_archive_service_view->GetSetupParam(
                     test_entity, component_editor_test::TestMetaComponentHandle::ID());
 
             const component_editor_test::TestMetaComponent::SetupParam* meta_setup_param = 
-                dynamic_cast<const component_editor_test::TestMetaComponent::SetupParam*>(&setup_param());
+                dynamic_cast<const component_editor_test::TestMetaComponent::SetupParam*>(&setup_param);
             ASSERT_NE(meta_setup_param, nullptr);
             EXPECT_EQ(meta_setup_param->name, component_editor_test::DEFAULT_NAME);
             EXPECT_EQ(meta_setup_param->active_self, component_editor_test::DEFAULT_ACTIVE_SELF);
@@ -234,12 +243,12 @@ TEST(EntityArchiveServiceView, Edit)
 
         // Get and verify test transform component setup param
         {
-            utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> setup_param = 
+            const ecs::Component::SetupParam& setup_param = 
                 entity_archive_service_view->GetSetupParam(
                     test_entity, component_editor_test::TestTransformComponentHandle::ID());
 
             const component_editor_test::TestTransformComponent::SetupParam* transform_setup_param = 
-                dynamic_cast<const component_editor_test::TestTransformComponent::SetupParam*>(&setup_param());
+                dynamic_cast<const component_editor_test::TestTransformComponent::SetupParam*>(&setup_param);
             ASSERT_NE(transform_setup_param, nullptr);
             EXPECT_FLOAT_EQ(transform_setup_param->position.x, 0.0f);
             EXPECT_FLOAT_EQ(transform_setup_param->position.y, 0.0f);
@@ -282,12 +291,12 @@ TEST(EntityArchiveServiceView, Edit)
         {
 
             // Get meta component field map
-            utility_header::ConstSharedLockedValue<component_editor::FieldMap> meta_field_map = 
+            const component_editor::FieldMap& meta_field_map = 
                 entity_archive_service_view->GetComponentFieldMap(
                     component_editor_test::TestMetaComponentHandle::ID());
 
             // Iterate through fields and edit values
-            for (const auto& [field_name, field_info] : meta_field_map())
+            for (const auto& [field_name, field_info] : meta_field_map)
             {
                 // Edit field based on its type and name
                 if (field_info.type_name == "std::string" && field_name == "name")
@@ -316,12 +325,12 @@ TEST(EntityArchiveServiceView, Edit)
 
         {
             // Get transform component field map
-            utility_header::ConstSharedLockedValue<component_editor::FieldMap> transform_field_map = 
+            const component_editor::FieldMap& transform_field_map = 
                 entity_archive_service_view->GetComponentFieldMap(
                     component_editor_test::TestTransformComponentHandle::ID());
 
             // Iterate through fields and edit values
-            for (const auto& [field_name, field_info] : transform_field_map())
+            for (const auto& [field_name, field_info] : transform_field_map)
             {
                 // Edit field based on its type and name
                 if (field_info.type_name == "DirectX::XMFLOAT3" && field_name == "position")
@@ -384,12 +393,12 @@ TEST(EntityArchiveServiceView, Edit)
 
         // Get and verify edited test meta component setup param
         {
-            utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> setup_param = 
+            const ecs::Component::SetupParam& setup_param = 
                 entity_archive_service_view->GetSetupParam(
                     test_entity, component_editor_test::TestMetaComponentHandle::ID());
 
             const component_editor_test::TestMetaComponent::SetupParam* meta_setup_param = 
-                dynamic_cast<const component_editor_test::TestMetaComponent::SetupParam*>(&setup_param());
+                dynamic_cast<const component_editor_test::TestMetaComponent::SetupParam*>(&setup_param);
             ASSERT_NE(meta_setup_param, nullptr);
             EXPECT_EQ(meta_setup_param->name, EDITED_NAME);
             EXPECT_EQ(meta_setup_param->active_self, EDITED_ACTIVE_SELF);
@@ -399,12 +408,12 @@ TEST(EntityArchiveServiceView, Edit)
 
         // Get and verify edited test transform component setup param
         {
-            utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> setup_param = 
+            const ecs::Component::SetupParam& setup_param = 
                 entity_archive_service_view->GetSetupParam(
                     test_entity, component_editor_test::TestTransformComponentHandle::ID());
 
             const component_editor_test::TestTransformComponent::SetupParam* transform_setup_param = 
-                dynamic_cast<const component_editor_test::TestTransformComponent::SetupParam*>(&setup_param());
+                dynamic_cast<const component_editor_test::TestTransformComponent::SetupParam*>(&setup_param);
             ASSERT_NE(transform_setup_param, nullptr);
             EXPECT_FLOAT_EQ(transform_setup_param->position.x, EDITED_POSITION.x);
             EXPECT_FLOAT_EQ(transform_setup_param->position.y, EDITED_POSITION.y);
@@ -415,6 +424,329 @@ TEST(EntityArchiveServiceView, Edit)
             EXPECT_FLOAT_EQ(transform_setup_param->scale.x, EDITED_SCALE.x);
             EXPECT_FLOAT_EQ(transform_setup_param->scale.y, EDITED_SCALE.y);
             EXPECT_FLOAT_EQ(transform_setup_param->scale.z, EDITED_SCALE.z);
+        }
+    }
+
+    /*******************************************************************************************************************
+     * Cleanup
+    /******************************************************************************************************************/
+
+    service_registry.reset();
+}
+
+TEST(EntityArchiveServiceView, Export)
+{
+    bool result = false;
+
+    // Create component id generator
+    std::unique_ptr<ecs::ComponentIDGenerator> component_id_generator
+        = std::make_unique<ecs::ComponentIDGenerator>();
+
+    /*******************************************************************************************************************
+     * Import services
+    /******************************************************************************************************************/
+
+    // Create service id generator
+    std::unique_ptr<mono_service::ServiceIDGenerator> service_id_generator
+        = std::make_unique<mono_service::ServiceIDGenerator>();
+
+    // Create service registry
+    std::unique_ptr<mono_service::ServiceRegistry> service_registry
+        = std::make_unique<mono_service::ServiceRegistry>();
+
+    // Import entity archive service in to registry
+    constexpr mono_service::ServiceThreadAffinityID ENTITY_ARCHIVE_SERVICE_THREAD_AFFINITY_ID = 0;
+    {
+        mono_entity_archive_service::EntityArchiveService::SetupParam entity_archive_service_setup_param;
+
+        // Register component IDs and names
+        component_editor::ComponentNameMap& component_name_map = entity_archive_service_setup_param.component_name_map;
+        component_name_map[component_editor_test::TestMetaComponentHandle::ID()] 
+            = "component_editor_test::TestMetaComponent";
+        component_name_map[component_editor_test::TestTransformComponentHandle::ID()] 
+            = "component_editor_test::TestTransformComponent";
+
+        // Register component adders
+        component_editor::ComponentAdderMap& component_adder_map = entity_archive_service_setup_param.component_adder_map;
+        component_adder_map[component_editor_test::TestMetaComponentHandle::ID()] 
+            = std::make_unique<component_editor_test::TestMetaComponentAdder>();
+        component_adder_map[component_editor_test::TestTransformComponentHandle::ID()] 
+            = std::make_unique<component_editor_test::TestTransformComponentAdder>();
+
+        // Copy component reflection registry
+        entity_archive_service_setup_param.component_reflection_registry 
+            = component_editor_test::g_component_reflection_registry;
+
+        // Copy component field value setter
+        entity_archive_service_setup_param.setup_param_field_value_setter
+            = component_editor_test::g_setup_param_field_value_setter;
+
+        // Copy setup param field type registry
+        entity_archive_service_setup_param.setup_param_field_type_registry_
+            = component_editor_test::g_setup_param_field_type_registry;
+
+        result = mono_service::ImportService<
+            mono_entity_archive_service::EntityArchiveService,
+            mono_entity_archive_service::EntityArchiveServiceHandle>(
+                *service_registry, ENTITY_ARCHIVE_SERVICE_THREAD_AFFINITY_ID, 
+                entity_archive_service_setup_param);
+        ASSERT_TRUE(result);
+    }
+
+    // Create entity archive service proxy
+    std::unique_ptr<mono_service::ServiceProxy> entity_archive_service_proxy = nullptr;
+    service_registry->WithUniqueLock([&](const mono_service::ServiceRegistry& registry)
+    {
+        // Get the service
+        mono_service::Service& service = registry.Get(
+            mono_entity_archive_service::EntityArchiveServiceHandle::ID());
+
+        // Create the service proxy
+        entity_archive_service_proxy = service.CreateServiceProxy();
+    });
+    ASSERT_NE(entity_archive_service_proxy, nullptr);
+
+    // Create service proxy registry
+    std::unique_ptr<mono_service::ServiceProxyRegistry> service_registry_proxy
+        = std::make_unique<mono_service::ServiceProxyRegistry>();
+
+    // Create service proxy manager
+    std::unique_ptr<mono_service::ServiceProxyManager> service_proxy_manager
+        = std::make_unique<mono_service::ServiceProxyManager>(*service_registry_proxy);
+
+    /*******************************************************************************************************************
+     * Add setup params
+    /******************************************************************************************************************/
+
+    // Create test entity
+    ecs::Entity test_entity(0, 0);
+
+    {
+        // Create test meta component setup param
+        std::unique_ptr<component_editor_test::TestMetaComponent::SetupParam> meta_setup_param 
+            = std::make_unique<component_editor_test::TestMetaComponent::SetupParam>();
+
+        // Create test transform component setup param
+        std::unique_ptr<component_editor_test::TestTransformComponent::SetupParam> transform_setup_param 
+            = std::make_unique<component_editor_test::TestTransformComponent::SetupParam>();
+
+        // Create entity archive service command list
+        std::unique_ptr<mono_service::ServiceCommandList> command_list 
+            = entity_archive_service_proxy->CreateCommandList();
+        mono_entity_archive_service::EntityArchiveServiceCommandList* entity_archive_command_list 
+            = dynamic_cast<mono_entity_archive_service::EntityArchiveServiceCommandList*>(command_list.get());
+        ASSERT_NE(entity_archive_command_list, nullptr);
+
+        // Add setup param to entity archive service
+        entity_archive_command_list->AddSetupParam(
+            test_entity, component_editor_test::TestMetaComponentHandle::ID(), std::move(meta_setup_param));
+        entity_archive_command_list->AddSetupParam(
+            test_entity, component_editor_test::TestTransformComponentHandle::ID(), std::move(transform_setup_param));
+
+        // Submit command list
+        entity_archive_service_proxy->SubmitCommandList(std::move(command_list));
+    }
+
+    /*******************************************************************************************************************
+     * Update service
+    /******************************************************************************************************************/
+
+    service_registry->WithUniqueLock([&](mono_service::ServiceRegistry& registry)
+    {
+        // Get the service
+        mono_service::Service& service = registry.Get(
+            mono_entity_archive_service::EntityArchiveServiceHandle::ID());
+
+        // Pre-update
+        result = service.PreUpdate();
+        ASSERT_TRUE(result);
+
+        // Update
+        result = service.Update();
+        ASSERT_TRUE(result);
+
+        // Post-update
+        result = service.PostUpdate();
+        ASSERT_TRUE(result);
+    });
+
+    /*******************************************************************************************************************
+     * Verify setup params
+    /******************************************************************************************************************/
+
+    {
+        // Create entity archive service view
+        std::unique_ptr<mono_service::ServiceView> service_view 
+            = entity_archive_service_proxy->CreateView();
+        mono_entity_archive_service::EntityArchiveServiceView* entity_archive_service_view 
+            = dynamic_cast<mono_entity_archive_service::EntityArchiveServiceView*>(service_view.get());
+        ASSERT_NE(entity_archive_service_view, nullptr);
+
+        // Get and verify test meta component setup param
+        {
+            const ecs::Component::SetupParam& setup_param = 
+                entity_archive_service_view->GetSetupParam(
+                    test_entity, component_editor_test::TestMetaComponentHandle::ID());
+
+            const component_editor_test::TestMetaComponent::SetupParam* meta_setup_param = 
+                dynamic_cast<const component_editor_test::TestMetaComponent::SetupParam*>(&setup_param);
+            ASSERT_NE(meta_setup_param, nullptr);
+            EXPECT_EQ(meta_setup_param->name, component_editor_test::DEFAULT_NAME);
+            EXPECT_EQ(meta_setup_param->active_self, component_editor_test::DEFAULT_ACTIVE_SELF);
+            EXPECT_EQ(meta_setup_param->tag, component_editor_test::DEFAULT_TAG);
+            EXPECT_EQ(meta_setup_param->layer, component_editor_test::DEFAULT_LAYER);
+        }
+
+        // Get and verify test transform component setup param
+        {
+            const ecs::Component::SetupParam& setup_param = 
+                entity_archive_service_view->GetSetupParam(
+                    test_entity, component_editor_test::TestTransformComponentHandle::ID());
+
+            const component_editor_test::TestTransformComponent::SetupParam* transform_setup_param = 
+                dynamic_cast<const component_editor_test::TestTransformComponent::SetupParam*>(&setup_param);
+            ASSERT_NE(transform_setup_param, nullptr);
+            EXPECT_FLOAT_EQ(transform_setup_param->position.x, 0.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->position.y, 0.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->position.z, 0.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->rotation.x, 0.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->rotation.y, 0.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->rotation.z, 0.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->scale.x, 1.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->scale.y, 1.0f);
+            EXPECT_FLOAT_EQ(transform_setup_param->scale.z, 1.0f);
+        }
+    }
+
+    /*******************************************************************************************************************
+     * Export setup params
+    /******************************************************************************************************************/
+
+    const std::string EXPORT_FILE_PATH = "output/exported_setup_params.json";
+    {
+        // Create entity archive service command list
+        std::unique_ptr<mono_service::ServiceCommandList> command_list 
+            = entity_archive_service_proxy->CreateCommandList();
+        mono_entity_archive_service::EntityArchiveServiceCommandList* entity_archive_command_list 
+            = dynamic_cast<mono_entity_archive_service::EntityArchiveServiceCommandList*>(command_list.get());
+        ASSERT_NE(entity_archive_command_list, nullptr);
+
+        // Export setup params to file
+        entity_archive_command_list->ExportComponentSetupParamsToFile(
+            EXPORT_FILE_PATH, std::vector<ecs::Entity>{ test_entity }, *service_proxy_manager);
+
+        // Submit command list
+        entity_archive_service_proxy->SubmitCommandList(std::move(command_list));
+    }
+
+    /*******************************************************************************************************************
+     * Update service
+    /******************************************************************************************************************/
+
+    service_registry->WithUniqueLock([&](mono_service::ServiceRegistry& registry)
+    {
+        // Get the service
+        mono_service::Service& service 
+            = registry.Get(mono_entity_archive_service::EntityArchiveServiceHandle::ID());
+
+        // Pre-update
+        result = service.PreUpdate();
+        ASSERT_TRUE(result);
+
+        // Update
+        result = service.Update();
+        ASSERT_TRUE(result);
+
+        // Post-update
+        result = service.PostUpdate();
+        ASSERT_TRUE(result);
+    });
+
+    /*******************************************************************************************************************
+     * Verify exported setup params and import them back
+    /******************************************************************************************************************/
+
+    {
+        // Read exported JSON file
+        std::ifstream input_file(EXPORT_FILE_PATH);
+        ASSERT_TRUE(input_file.is_open());
+
+        nlohmann::json exported_json;
+        input_file >> exported_json;
+
+        // Create entity archive service view
+        std::unique_ptr<mono_service::ServiceView> service_view 
+            = entity_archive_service_proxy->CreateView();
+        mono_entity_archive_service::EntityArchiveServiceView* entity_archive_service_view 
+            = dynamic_cast<mono_entity_archive_service::EntityArchiveServiceView*>(service_view.get());
+        ASSERT_NE(entity_archive_service_view, nullptr);
+
+        // Get component name map
+        const component_editor::ComponentNameMap& component_name_map
+            = entity_archive_service_view->GetComponentNameMap();
+
+        // Get component adder map
+        const component_editor::ComponentAdderMap& component_adder_map
+            = entity_archive_service_view->GetComponentAdderMap();
+
+        // Create component name to id map
+        std::unordered_map<std::string, ecs::ComponentID> component_name_to_id_map;
+        for (const auto& [component_id, component_name] : component_name_map)
+            component_name_to_id_map[component_name] = component_id;
+
+        // Get entities JSON
+        const nlohmann::json& entities_json = exported_json[mono_entity_archive_service::EXPORT_TAG_ENTITIES];
+
+        for (const auto& entity_json : entities_json)
+        {
+            for (auto it = entity_json.begin(); it != entity_json.end(); ++it)
+            {
+                const std::string& component_name = it.key();
+                const nlohmann::json& component_json = it.value();
+
+                // Get component ID
+                auto component_id_it = component_name_to_id_map.find(component_name);
+                ASSERT_NE(component_id_it, component_name_to_id_map.end());
+                ecs::ComponentID component_id = component_id_it->second;
+
+                // Get component field map
+                const component_editor::FieldMap& component_field_map
+                    = entity_archive_service_view->GetComponentFieldMap(component_id);
+
+                // Get component adder
+                assert(component_adder_map.find(component_id) != component_adder_map.end());
+                const component_editor::ComponentAdder& component_adder = *(component_adder_map.at(component_id));
+
+                // Create setup param using component adder
+                std::unique_ptr<ecs::Component::SetupParam> setup_param
+                    = component_adder.GetSetupParam(*service_proxy_manager);
+
+                for (auto field_it = component_json.begin(); field_it != component_json.end(); ++field_it)
+                {
+                    const std::string& field_name = field_it.key();
+                    const nlohmann::json& field_value_json = field_it.value();
+
+                    // Get type name of the field
+                    assert(
+                        component_field_map.find(field_name) != component_field_map.end() && 
+                        "Field not found in component field map");
+                    const std::string& field_type_name = component_field_map.at(field_name).type_name;
+
+                    // Get field value import function
+                    const mono_entity_archive_service::ComponentSetupParamAnyFieldImportFunc& import_func
+                        = entity_archive_service_view->GetSetupParamFieldTypeRegistry().GetSetupParamFieldImportFunc(
+                            field_type_name);
+
+                    // Import field value from JSON
+                    std::any field_value_any = import_func(field_name, field_value_json, *service_proxy_manager);
+
+                    // Set field value in setup param
+                    bool set_result = entity_archive_service_view->GetSetupParamEditor().SetFieldValue(
+                        setup_param.get(), field_type_name, 
+                        component_field_map.at(field_name).offset, field_value_any);
+                    ASSERT_TRUE(set_result);
+                }
+            }
         }
     }
 

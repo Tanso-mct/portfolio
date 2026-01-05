@@ -42,6 +42,7 @@
 #include "mono_entity_archive_extension/include/transform_manipulator_ui_component.h"
 #include "mono_entity_archive_extension/include/menu_bar_ui_component.h"
 #include "mono_entity_archive_extension/include/material_editor_ui_component.h"
+#include "mono_entity_archive_extension/include/project_io_component.h"
 #include "mono_entity_archive_extension/include/hierarchy_drawer.h"
 #include "mono_entity_archive_extension/include/inspector_drawer.h"
 #include "mono_entity_archive_extension/include/asset_browser_drawer.h"
@@ -93,6 +94,7 @@ bool InitialScene::LoadAssets(ecs::World& world)
                 = std::make_unique<mono_asset_extension::TextureAssetSourceData>(graphics_service_proxy->Clone());
 
             // Set texture info for empty texture asset
+            texture_source_data->SetName("Empty");
             mono_asset_extension::TextureAssetSourceData::TextureInfo texture_info = {};
             texture_info.width = 1;
             texture_info.height = 1;
@@ -1250,6 +1252,43 @@ bool InitialScene::CreateEntities(ecs::World& world)
         }
     }
 
+    // Project io
+    ecs::Entity project_io_entity = world.CreateEntity();
+    {
+        // Meta component
+        {
+            std::unique_ptr<mono_meta_extension::MetaComponent::SetupParam> param
+                = std::make_unique<mono_meta_extension::MetaComponent::SetupParam>();
+            param->name = "Project Setter";
+            param->active_self = true;
+
+            bool result = world.AddComponent<mono_meta_extension::MetaComponent>(
+                project_io_entity, mono_meta_extension::MetaComponentHandle::ID(), std::move(param));
+            assert(result);
+        }
+
+        // Scene tag component
+        {
+            std::unique_ptr<mono_scene_extension::SceneTagComponent::SetupParam> param
+                = std::make_unique<mono_scene_extension::SceneTagComponent::SetupParam>();
+            param->scene_id = InitialScene::ID();
+
+            bool result = world.AddComponent<mono_scene_extension::SceneTagComponent>(
+                project_io_entity, mono_scene_extension::SceneTagComponentHandle::ID(), std::move(param));
+            assert(result);
+        }
+
+        // Project io component
+        {
+            std::unique_ptr<mono_entity_archive_extension::ProjectIOComponent::SetupParam> param
+                = std::make_unique<mono_entity_archive_extension::ProjectIOComponent::SetupParam>();
+
+            bool result = world.AddComponent<mono_entity_archive_extension::ProjectIOComponent>(
+                project_io_entity, mono_entity_archive_extension::ProjectIOComponentHandle::ID(), std::move(param));
+            assert(result);
+        }
+    }
+
     // Menu bar
     {
         ecs::Entity entity = world.CreateEntity();
@@ -1297,6 +1336,7 @@ bool InitialScene::CreateEntities(ecs::World& world)
             param->inspector_entity_ = inspector_entity;
             param->asset_browser_entity_ = asset_browser_entity;
             param->material_editor_entity_ = material_editor_entity;
+            param->project_io_entity_ = project_io_entity;
 
             bool result = world.AddComponent<mono_entity_archive_extension::MenuBarUIComponent>(
                 entity, mono_entity_archive_extension::MenuBarUIComponentHandle::ID(), std::move(param));

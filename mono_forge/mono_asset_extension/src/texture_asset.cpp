@@ -185,8 +185,8 @@ std::unique_ptr<asset_loader::Asset> TextureAssetLoader::Load(
         // Get file name from file path
         std::string file_name = utility_header::GetFileNameFromPath(mesh_source_data->GetFilePath());
 
-        // Set asset name
-        asset->SetName(file_name);
+        // Set asset file path
+        asset->SetFilePath(std::string(mesh_source_data->GetFilePath()));
     }
     else if (mesh_source_data->HasTextureInfo())
     {
@@ -195,13 +195,22 @@ std::unique_ptr<asset_loader::Asset> TextureAssetLoader::Load(
         asset = TextureAsset::CreateInstance<TextureAsset>(
             std::move(mesh_source_data->GetServiceProxy().Clone()),
             texture_info.width, texture_info.height, texture_info.format, nullptr);
-
-        // Set asset name
-        asset->SetName("Procedural");
     }
     else
     {
         assert(false && "No valid image data found in texture source data.");
+    }
+
+    if (!mesh_source_data->GetName().empty())
+    {
+        // Use name from source data if set
+        asset->SetName(mesh_source_data->GetName().data());
+    }
+    else
+    {
+        // Get file name from file path
+        std::string file_name = utility_header::GetFileNameFromPath(mesh_source_data->GetFilePath());
+        asset->SetName(file_name);
     }
 
     return asset; // Success

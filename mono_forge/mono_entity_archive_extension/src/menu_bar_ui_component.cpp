@@ -24,6 +24,7 @@ bool MenuBarUIComponent::Setup(ecs::Component::SetupParam& param)
     inspector_entity_ = menu_bar_ui_component_param->inspector_entity_;
     asset_browser_entity_ = menu_bar_ui_component_param->asset_browser_entity_;
     material_editor_entity_ = menu_bar_ui_component_param->material_editor_entity_;
+    project_io_entity_ = menu_bar_ui_component_param->project_io_entity_;
 
     return true; // Success
 }
@@ -40,6 +41,7 @@ bool MenuBarUIComponent::Apply(const ecs::Component::SetupParam& param)
     inspector_entity_ = menu_bar_ui_component_param->inspector_entity_;
     asset_browser_entity_ = menu_bar_ui_component_param->asset_browser_entity_;
     material_editor_entity_ = menu_bar_ui_component_param->material_editor_entity_;
+    project_io_entity_ = menu_bar_ui_component_param->project_io_entity_;
 
     return true; // Success
 }

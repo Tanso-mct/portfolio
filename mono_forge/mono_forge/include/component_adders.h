@@ -15,6 +15,10 @@ public:
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
 };
@@ -28,6 +32,10 @@ public:
     virtual ~TransformComponentAdder() = default;
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
@@ -43,6 +51,10 @@ public:
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
 };
@@ -56,6 +68,10 @@ public:
     virtual ~DirectionalLightComponentAdder() = default;
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
@@ -71,6 +87,10 @@ public:
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
 };
@@ -85,6 +105,10 @@ public:
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
 };
@@ -98,6 +122,10 @@ public:
     virtual ~RenderableComponentAdder() = default;
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity,
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const override;

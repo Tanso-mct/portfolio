@@ -24,6 +24,9 @@ public:
 
     // Get the list of loaded asset handle IDs
     std::vector<asset_loader::AssetHandleID> GetLoadedAssetIDs() const;
+
+    // Get the asset handle ID by asset name
+    asset_loader::AssetHandleID GetAssetHandleIDByName(std::string_view asset_name) const;
 };
 
 } // namespace mono_asset_service

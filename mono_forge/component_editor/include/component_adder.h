@@ -21,6 +21,16 @@ public:
         ecs::World& world, const ecs::Entity& entity, 
         mono_service::ServiceProxyManager& service_proxy_manager) const = 0;
 
+    // Add a component to the world for the specified entity with given setup parameters and default constructor arguments
+    virtual bool Add(
+        ecs::World& world, const ecs::Entity& entity, 
+        std::unique_ptr<ecs::Component::SetupParam> setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) const
+    {
+        assert(false && "Add with setup_param not implemented for this component adder");
+        return false;
+    }
+
     // Get default setup param for the component
     virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
         mono_service::ServiceProxyManager& service_proxy_manager) const

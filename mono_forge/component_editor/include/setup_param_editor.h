@@ -23,7 +23,7 @@ public:
     // Cast the field value to the appropriate type and set it in the setup parameter
     bool SetFieldValue(
         ecs::Component::SetupParam* setup_param,
-        std::string_view field_type, size_t field_offset, std::any new_value);
+        std::string_view field_type, size_t field_offset, std::any new_value) const;
 
     // Register a field type with its corresponding set function
     template <typename T>
@@ -101,6 +101,11 @@ public:
 
     // Clear the list of edited setup parameters
     void ClearEditedInfos() { edited_infos_.clear(); }
+
+    // Set a field value in the setup parameter
+    bool SetFieldValue(
+        ecs::Component::SetupParam* setup_param,
+        std::string_view field_type, size_t field_offset, std::any new_value) const;
 
 private:
     // The reference to the setup parameter manager

@@ -11,6 +11,8 @@
 namespace render_graph
 {
 
+constexpr const char* LAMBERT_MATERIAL_TYPE_NAME = "LambertMaterial";
+
 // Material type handle for Lambert material
 class RENDER_GRAPH_DLL LambertMaterialTypeHandle : public MaterialTypeHandle<LambertMaterialTypeHandle> {};
 
@@ -106,6 +108,11 @@ public:
         std::unique_ptr<Material::SetupParam> Clone() const override
         {
             return std::make_unique<SetupParam>(*this);
+        }
+
+        MaterialTypeHandleID GetMaterialTypeHandleID() const override
+        {
+            return LambertMaterialTypeHandle::ID();
         }
 
         // Debug name prefix

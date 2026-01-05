@@ -29,6 +29,12 @@ using ComponentSetupParamAnyFieldCreateFunc = component_editor::SetupParamAnyFie
 // Alias for setup param any field edit function with ServiceProxyManager reference
 using ComponentSetupParamAnyFieldEditFunc = component_editor::SetupParamAnyFieldEditFunc<mono_service::ServiceProxyManager&>;
 
+// Alias for setup param any field export function with ServiceProxyManager reference
+using ComponentSetupParamAnyFieldExportFunc = component_editor::SetupParamAnyFieldExportFunc<mono_service::ServiceProxyManager&>;
+
+// Alias for setup param any field import function with ServiceProxyManager reference
+using ComponentSetupParamAnyFieldImportFunc = component_editor::SetupParamAnyFieldImportFunc<mono_service::ServiceProxyManager&>;
+
 // Alias for material setup param editor registry with ServiceProxyManager reference
 using MaterialSetupParamEditorRegistry = material_editor::SetupParamEditorRegistry<mono_service::ServiceProxyManager&>;
 
@@ -37,6 +43,12 @@ using MaterialSetupParamEditFunc = material_editor::SetupParamEditFunc<mono_serv
 
 // Alias for material setup param create function with ServiceProxyManager reference
 using MaterialSetupParamCreateFunc = material_editor::MaterialCreateFunc<mono_service::ServiceProxyManager&>;
+
+// Alias for material setup param export function with ServiceProxyManager reference
+using MaterialSetupParamExportFunc = material_editor::SetupParamExportFunc<mono_service::ServiceProxyManager&>;
+
+// Alias for material setup param import function with ServiceProxyManager reference
+using MaterialSetupParamImportFunc = material_editor::MaterialImportFunc<mono_service::ServiceProxyManager&>;
 
 // Alias for material setup param editor registrar with ServiceProxyManager reference
 using MaterialSetupParamEditorRegistrar = material_editor::SetupParamEditorRegistrar<mono_service::ServiceProxyManager&>;
@@ -50,6 +62,9 @@ public:
     EntityArchiveServiceAPI() = default;
     virtual ~EntityArchiveServiceAPI() = default;
 
+    // Get the setup param manager
+    virtual const component_editor::SetupParamManager& GetSetupParamManager() const = 0;
+
     // Get the setup param adder
     virtual component_editor::SetupParamAdder& GetSetupParamAdder() = 0;
 
@@ -58,6 +73,9 @@ public:
 
     // Get the setup param editor
     virtual component_editor::SetupParamEditor& GetSetupParamEditor() = 0;
+
+    // Get the setup param editor (const version)
+    virtual const component_editor::SetupParamEditor& GetSetupParamEditor() const = 0;
     
     // Get the material setup param manager
     virtual const material_editor::SetupParamManager& GetMaterialSetupParamManager() const = 0;
@@ -72,7 +90,7 @@ public:
     virtual bool CheckIsEditable(ecs::Entity entity, ecs::ComponentID component_id) const = 0;
 
     // Get the field map for a component ID
-    virtual utility_header::ConstSharedLockedValue<component_editor::FieldMap> GetComponentFieldMap(
+    virtual const component_editor::FieldMap& GetComponentFieldMap(
         ecs::ComponentID component_id) const = 0;
 
     // Get a setup param field value for an entity's component
@@ -80,7 +98,7 @@ public:
         ecs::Entity entity, ecs::ComponentID component_id, std::string_view field_name) const = 0;
 
     // Get the setup param for an entity's component
-    virtual utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> GetSetupParam(
+    virtual const ecs::Component::SetupParam& GetSetupParam(
         ecs::Entity entity, ecs::ComponentID component_id) const = 0;
 
     // Replace the setup param for an entity's component
@@ -88,13 +106,13 @@ public:
         ecs::Entity entity, ecs::ComponentID component_id, std::unique_ptr<ecs::Component::SetupParam> new_setup_param) = 0;
 
     // Get the component name map
-    virtual utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> GetComponentNameMap() const = 0;
+    virtual const component_editor::ComponentNameMap& GetComponentNameMap() const = 0;
 
     // Get the component adder map
-    virtual utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> GetComponentAdderMap() const = 0;
+    virtual const component_editor::ComponentAdderMap& GetComponentAdderMap() const = 0;
 
     // Get the component setup param type registry
-    virtual utility_header::ConstSharedLockedValue<ComponentSetupParamFieldTypeRegistry> GetSetupParamFieldTypeRegistry() const = 0;
+    virtual const ComponentSetupParamFieldTypeRegistry& GetSetupParamFieldTypeRegistry() const = 0;
 
     // Check if a component is editable
     virtual bool CheckComponentEditable(ecs::ComponentID component_id) const = 0;
@@ -103,7 +121,7 @@ public:
     virtual std::vector<component_editor::EditedInfo> GetEditedInfos() const = 0;
 
     // Get the material setup param editor registry
-    virtual utility_header::ConstSharedLockedValue<MaterialSetupParamEditorRegistry> GetMaterialSetupParamEditorRegistry() const = 0;
+    virtual const MaterialSetupParamEditorRegistry& GetMaterialSetupParamEditorRegistry() const = 0;
 
     // Replace the setup param for a material
     virtual void ReplaceSetupParam(
@@ -173,9 +191,11 @@ protected:
     EntityArchiveServiceAPI& GetAPI() { return *this; }
     const EntityArchiveServiceAPI& GetAPI() const { return *this; }
 
+    virtual const component_editor::SetupParamManager& GetSetupParamManager() const override;
     virtual component_editor::SetupParamAdder& GetSetupParamAdder() override;
     virtual component_editor::SetupParamEraser& GetSetupParamEraser() override;
     virtual component_editor::SetupParamEditor& GetSetupParamEditor() override;
+    virtual const component_editor::SetupParamEditor& GetSetupParamEditor() const override;
 
     virtual const material_editor::SetupParamManager& GetMaterialSetupParamManager() const override;
     virtual material_editor::SetupParamAdder& GetMaterialSetupParamAdder() override;
@@ -183,23 +203,23 @@ protected:
 
     virtual bool CheckIsEditable(ecs::Entity entity, ecs::ComponentID component_id) const override;
 
-    virtual utility_header::ConstSharedLockedValue<component_editor::FieldMap> GetComponentFieldMap(
+    virtual const component_editor::FieldMap& GetComponentFieldMap(
         ecs::ComponentID component_id) const override;
     virtual const uint8_t* GetSetupParamField(
         ecs::Entity entity, ecs::ComponentID component_id, std::string_view field_name) const override;
-    virtual utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> GetSetupParam(
+    virtual const ecs::Component::SetupParam& GetSetupParam(
         ecs::Entity entity, ecs::ComponentID component_id) const override;
     
     virtual void ReplaceSetupParam(
         ecs::Entity entity, ecs::ComponentID component_id, std::unique_ptr<ecs::Component::SetupParam> new_setup_param) override;
 
-    virtual utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> GetComponentNameMap() const override;
-    virtual utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> GetComponentAdderMap() const override;
-    virtual utility_header::ConstSharedLockedValue<ComponentSetupParamFieldTypeRegistry> GetSetupParamFieldTypeRegistry() const override;
+    virtual const component_editor::ComponentNameMap& GetComponentNameMap() const override;
+    virtual const component_editor::ComponentAdderMap& GetComponentAdderMap() const override;
+    virtual const ComponentSetupParamFieldTypeRegistry& GetSetupParamFieldTypeRegistry() const override;
     virtual bool CheckComponentEditable(ecs::ComponentID component_id) const override;
     virtual std::vector<component_editor::EditedInfo> GetEditedInfos() const override;
 
-    virtual utility_header::ConstSharedLockedValue<MaterialSetupParamEditorRegistry> GetMaterialSetupParamEditorRegistry() const override;
+    virtual const MaterialSetupParamEditorRegistry& GetMaterialSetupParamEditorRegistry() const override;
     virtual void ReplaceSetupParam(
         render_graph::MaterialHandle* material_handle, 
         std::unique_ptr<material_editor::SetupParamWrapper> new_setup_param) override;

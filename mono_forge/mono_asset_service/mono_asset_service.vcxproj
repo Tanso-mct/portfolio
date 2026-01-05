@@ -349,6 +349,7 @@
     <ClInclude Include="include\asset_service_command_list.h" />
     <ClInclude Include="include\asset_service_view.h" />
     <ClInclude Include="include\dll_config.h" />
+    <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>

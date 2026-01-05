@@ -37,6 +37,17 @@ bool MetaComponentAdder::Add(
         std::move(param));
 }
 
+bool MetaComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    // Add MetaComponent to the world for the specified entity
+    return world.AddComponent<mono_meta_extension::MetaComponent>(
+        entity, mono_meta_extension::MetaComponentHandle::ID(),
+        std::move(setup_param));
+}
+
 std::unique_ptr<ecs::Component::SetupParam> MetaComponentAdder::GetSetupParam(
     mono_service::ServiceProxyManager& service_proxy_manager) const
 {
@@ -65,6 +76,24 @@ bool TransformComponentAdder::Add(
     return world.AddComponent<mono_transform_extension::TransformComponent>(
         entity, mono_transform_extension::TransformComponentHandle::ID(),
         std::move(param), std::move(transform_service_proxy));
+}
+
+bool TransformComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    std::unique_ptr<mono_service::ServiceProxy> transform_service_proxy = nullptr;
+    service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& manager)
+    {
+        // Get transform service proxy
+        transform_service_proxy = manager.GetServiceProxy(mono_transform_service::TransformServiceHandle::ID()).Clone();
+    });
+
+    // Add TransformComponent to the world for the specified entity
+    return world.AddComponent<mono_transform_extension::TransformComponent>(
+        entity, mono_transform_extension::TransformComponentHandle::ID(),
+        std::move(setup_param), std::move(transform_service_proxy));
 }
 
 std::unique_ptr<ecs::Component::SetupParam> TransformComponentAdder::GetSetupParam(
@@ -97,6 +126,24 @@ bool CameraComponentAdder::Add(
         std::move(param), std::move(graphics_service_proxy));
 }
 
+bool CameraComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    // Get graphics service proxy
+    std::unique_ptr<mono_service::ServiceProxy> graphics_service_proxy = nullptr;
+    service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& manager)
+    {
+        graphics_service_proxy = manager.GetServiceProxy(mono_graphics_service::GraphicsServiceHandle::ID()).Clone();
+    });
+
+    // Add CameraComponent to the world for the specified entity
+    return world.AddComponent<mono_graphics_extension::CameraComponent>(
+        entity, mono_graphics_extension::CameraComponentHandle::ID(),
+        std::move(setup_param), std::move(graphics_service_proxy));
+}
+
 std::unique_ptr<ecs::Component::SetupParam> CameraComponentAdder::GetSetupParam(
     mono_service::ServiceProxyManager& service_proxy_manager) const
 {
@@ -125,6 +172,24 @@ bool DirectionalLightComponentAdder::Add(
     return world.AddComponent<mono_graphics_extension::DirectionalLightComponent>(
         entity, mono_graphics_extension::DirectionalLightComponentHandle::ID(),
         std::move(param), std::move(graphics_service_proxy), mono_graphics_extension::BACK_BUFFER_COUNT);
+}
+
+bool DirectionalLightComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    // Get graphics service proxy
+    std::unique_ptr<mono_service::ServiceProxy> graphics_service_proxy = nullptr;
+    service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& manager)
+    {
+        graphics_service_proxy = manager.GetServiceProxy(mono_graphics_service::GraphicsServiceHandle::ID()).Clone();
+    });
+
+    // Add DirectionalLightComponent to the world for the specified entity
+    return world.AddComponent<mono_graphics_extension::DirectionalLightComponent>(
+        entity, mono_graphics_extension::DirectionalLightComponentHandle::ID(),
+        std::move(setup_param), std::move(graphics_service_proxy), mono_graphics_extension::BACK_BUFFER_COUNT);
 }
 
 std::unique_ptr<ecs::Component::SetupParam> DirectionalLightComponentAdder::GetSetupParam(
@@ -157,6 +222,24 @@ bool AmbientLightComponentAdder::Add(
         std::move(param), std::move(graphics_service_proxy), mono_graphics_extension::BACK_BUFFER_COUNT);
 }
 
+bool AmbientLightComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    // Get graphics service proxy
+    std::unique_ptr<mono_service::ServiceProxy> graphics_service_proxy = nullptr;
+    service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& manager)
+    {
+        graphics_service_proxy = manager.GetServiceProxy(mono_graphics_service::GraphicsServiceHandle::ID()).Clone();
+    });
+
+    // Add AmbientLightComponent to the world for the specified entity
+    return world.AddComponent<mono_graphics_extension::AmbientLightComponent>(
+        entity, mono_graphics_extension::AmbientLightComponentHandle::ID(),
+        std::move(setup_param), std::move(graphics_service_proxy), mono_graphics_extension::BACK_BUFFER_COUNT);
+}
+
 std::unique_ptr<ecs::Component::SetupParam> AmbientLightComponentAdder::GetSetupParam(
     mono_service::ServiceProxyManager& service_proxy_manager) const
 {
@@ -187,6 +270,24 @@ bool PointLightComponentAdder::Add(
         std::move(param), std::move(graphics_service_proxy), mono_graphics_extension::BACK_BUFFER_COUNT);
 }
 
+bool PointLightComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    // Get graphics service proxy
+    std::unique_ptr<mono_service::ServiceProxy> graphics_service_proxy = nullptr;
+    service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& manager)
+    {
+        graphics_service_proxy = manager.GetServiceProxy(mono_graphics_service::GraphicsServiceHandle::ID()).Clone();
+    });
+
+    // Add PointLightComponent to the world for the specified entity
+    return world.AddComponent<mono_graphics_extension::PointLightComponent>(
+        entity, mono_graphics_extension::PointLightComponentHandle::ID(),
+        std::move(setup_param), std::move(graphics_service_proxy), mono_graphics_extension::BACK_BUFFER_COUNT);
+}
+
 std::unique_ptr<ecs::Component::SetupParam> PointLightComponentAdder::GetSetupParam(
     mono_service::ServiceProxyManager& service_proxy_manager) const
 {
@@ -214,6 +315,23 @@ bool RenderableComponentAdder::Add(
     return world.AddComponent<mono_graphics_extension::RenderableComponent>(
         entity, mono_graphics_extension::RenderableComponentHandle::ID(),
         std::move(param), std::move(graphics_service_proxy));
+}
+
+bool RenderableComponentAdder::Add(
+    ecs::World &world, const ecs::Entity &entity,
+    std::unique_ptr<ecs::Component::SetupParam> setup_param,
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    // Get graphics and asset service proxies
+    std::unique_ptr<mono_service::ServiceProxy> graphics_service_proxy = nullptr;
+    service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& manager)
+    {
+        graphics_service_proxy = manager.GetServiceProxy(mono_graphics_service::GraphicsServiceHandle::ID()).Clone();
+    });
+
+    return world.AddComponent<mono_graphics_extension::RenderableComponent>(
+        entity, mono_graphics_extension::RenderableComponentHandle::ID(),
+        std::move(setup_param), std::move(graphics_service_proxy));
 }
 
 std::unique_ptr<ecs::Component::SetupParam> RenderableComponentAdder::GetSetupParam(

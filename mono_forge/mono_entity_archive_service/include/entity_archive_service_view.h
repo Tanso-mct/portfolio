@@ -24,7 +24,7 @@ public:
     bool CheckIsEditable(ecs::Entity entity, ecs::ComponentID component_id) const;
 
     // Get the field map for a component ID
-    utility_header::ConstSharedLockedValue<component_editor::FieldMap> GetComponentFieldMap(
+    const component_editor::FieldMap& GetComponentFieldMap(
         ecs::ComponentID component_id) const;
 
     // Get a setup param field value for an entity's component with specified type
@@ -32,23 +32,26 @@ public:
         ecs::Entity entity, ecs::ComponentID component_id, std::string_view field_name) const;
 
     // Get the setup param for an entity's component
-    utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> GetSetupParam(
+    const ecs::Component::SetupParam& GetSetupParam(
         ecs::Entity entity, ecs::ComponentID component_id) const;
 
     // Get component name map
-    utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> GetComponentNameMap() const;
+    const component_editor::ComponentNameMap& GetComponentNameMap() const;
 
     // Get component name map
-    utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> GetComponentAdderMap() const;
+    const component_editor::ComponentAdderMap& GetComponentAdderMap() const;
 
     // Get component setup param field type registry
-    utility_header::ConstSharedLockedValue<ComponentSetupParamFieldTypeRegistry> GetSetupParamFieldTypeRegistry() const;
+    const ComponentSetupParamFieldTypeRegistry& GetSetupParamFieldTypeRegistry() const;
 
     // Check if a component is editable
     bool CheckComponentEditable(ecs::ComponentID component_id) const;
 
     // Get edited infos
     std::vector<component_editor::EditedInfo> GetEditedInfos() const;
+
+    // Get setup param editor
+    const component_editor::SetupParamEditor& GetSetupParamEditor() const;
 
     // Get material setup param for a material handle
     const material_editor::SetupParamWrapper* GetMaterialSetupParam(render_graph::MaterialHandle* material_handle) const;
@@ -62,7 +65,7 @@ public:
         render_graph::MaterialTypeHandleID material_type_handle_id) const;
 
     // Get the material setup param editor registry
-    utility_header::ConstSharedLockedValue<MaterialSetupParamEditorRegistry> GetMaterialSetupParamEditorRegistry() const;
+    const MaterialSetupParamEditorRegistry& GetMaterialSetupParamEditorRegistry() const;
 };
 
 } // namespace mono_entity_archive_service

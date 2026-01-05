@@ -17,6 +17,7 @@
 #include "mono_entity_archive_extension/include/transform_manipulate_system.h"
 #include "mono_entity_archive_extension/include/menu_bar_system.h"
 #include "mono_entity_archive_extension/include/material_editor_system.h"
+#include "mono_entity_archive_extension/include/project_io_system.h"
 //SYSTEMS_INCLUDE_END//
 
 namespace mono_forge
@@ -110,12 +111,24 @@ std::vector<std::function<void(mono_forge::ECSHub&, mono_service::ServiceProxyMa
             );
         }
     },
+    {
+        [](mono_forge::ECSHub& ecs_hub, mono_service::ServiceProxyManager& service_proxy_manager)
+        {
+            ecs_hub.RegisterSystem<mono_entity_archive_extension::ProjectIOSystem>
+            (
+                service_proxy_manager.GetServiceProxy(mono_entity_archive_service::EntityArchiveServiceHandle::ID()).Clone(),
+                service_proxy_manager.GetServiceProxy(mono_asset_service::AssetServiceHandle::ID()).Clone(),
+                service_proxy_manager
+            );
+        }
+    },
     //SYSTEM_REGISTRATION_END//
 };
 
 std::vector<ecs::SystemID> g_system_execution_order = 
 {
     //SYSTEM_EXECUTION_ORDER_BEGIN//
+    mono_entity_archive_extension::ProjectIOSystemHandle::ID(),
     mono_meta_extension::MetaSystemHandle::ID(),
     mono_asset_extension::AssetRequestProcessorSystemHandle::ID(),
     mono_entity_archive_extension::MenuBarSystemHandle::ID(),

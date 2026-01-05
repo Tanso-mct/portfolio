@@ -67,6 +67,8 @@ public:
     virtual bool Add(
         ecs::World& world, const ecs::Entity& entity,
         mono_service::ServiceProxyManager& service_proxy_manager) const override;
+    virtual std::unique_ptr<ecs::Component::SetupParam> GetSetupParam(
+        mono_service::ServiceProxyManager& service_proxy_manager) const override;
 };
 
 } // namespace component_editor_test

@@ -1,0 +1,166 @@
+{
+    "entities": [
+        {
+            "mono_graphics_extension::CameraComponent": {
+                "aspect_ratio": 1.8290106058120728,
+                "far_z": 1000.0,
+                "fov_y": 60.0,
+                "near_z": 0.10000000149011612
+            },
+            "mono_meta_extension::MetaComponent": {
+                "active_self": true,
+                "layer": 0,
+                "name": "Main Camera",
+                "tag": 0
+            },
+            "mono_transform_extension::TransformComponent": {
+                "position": [
+                    0.0,
+                    0.0,
+                    -2.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "mono_graphics_extension::RenderableComponent": {
+                "cast_shadows": true,
+                "mesh_set": null
+            },
+            "mono_meta_extension::MetaComponent": {
+                "active_self": true,
+                "layer": 0,
+                "name": "Floor",
+                "tag": 0
+            },
+            "mono_transform_extension::TransformComponent": {
+                "position": [
+                    0.0,
+                    -1.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    10.0,
+                    1.0,
+                    10.0
+                ]
+            }
+        },
+        {
+            "mono_graphics_extension::DirectionalLightComponent": {
+                "distance": 10.0,
+                "far_z": 100.0,
+                "intensity": 1.0,
+                "light_color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "near_z": 0.10000000149011612,
+                "ortho_height": 10.0,
+                "ortho_width": 10.0
+            },
+            "mono_meta_extension::MetaComponent": {
+                "active_self": true,
+                "layer": 0,
+                "name": "Directional Light",
+                "tag": 0
+            },
+            "mono_transform_extension::TransformComponent": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    60.0,
+                    90.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "mono_graphics_extension::AmbientLightComponent": {
+                "intensity": 0.30000001192092896,
+                "light_color": [
+                    0.9845559597015381,
+                    0.9845559597015381,
+                    0.9845559597015381,
+                    1.0
+                ]
+            },
+            "mono_meta_extension::MetaComponent": {
+                "active_self": true,
+                "layer": 0,
+                "name": "Ambient Light",
+                "tag": 0
+            },
+            "mono_transform_extension::TransformComponent": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "mono_graphics_extension::RenderableComponent": {
+                "cast_shadows": true,
+                "mesh_set": null
+            },
+            "mono_meta_extension::MetaComponent": {
+                "active_self": true,
+                "layer": 0,
+                "name": "Sofa",
+                "tag": 0
+            },
+            "mono_transform_extension::TransformComponent": {
+                "position": [
+                    0.16976843774318695,
+                    -0.5877163410186768,
+                    0.45003923773765564
+                ],
+                "rotation": [
+                    -0.0,
+                    -179.99998474121094,
+                    0.0
+                ],
+                "scale": [
+                    0.19999991357326508,
+                    0.20000000298023224,
+                    0.19999991357326508
+                ]
+            }
+        }
+    ]
+}

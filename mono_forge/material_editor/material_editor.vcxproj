@@ -346,6 +346,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\dll_config.h" />
+    <ClInclude Include="include\json.hpp" />
     <ClInclude Include="include\setup_param.h" />
     <ClInclude Include="include\setup_param_editor.h" />
     <ClInclude Include="include\setup_param_editor_registry.h" />

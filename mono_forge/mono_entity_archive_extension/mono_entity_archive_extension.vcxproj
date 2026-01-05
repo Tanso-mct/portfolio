@@ -354,6 +354,7 @@
     <ClInclude Include="include\entity_editor_system.h" />
     <ClInclude Include="include\hierarchy_drawer.h" />
     <ClInclude Include="include\hierarchy_ui_component.h" />
+    <ClInclude Include="include\import_helper.h" />
     <ClInclude Include="include\inspector_drawer.h" />
     <ClInclude Include="include\inspector_ui_component.h" />
     <ClInclude Include="include\manipulator_drawer.h" />
@@ -364,6 +365,8 @@
     <ClInclude Include="include\menu_bar_drawer.h" />
     <ClInclude Include="include\menu_bar_system.h" />
     <ClInclude Include="include\menu_bar_ui_component.h" />
+    <ClInclude Include="include\project_io_component.h" />
+    <ClInclude Include="include\project_io_system.h" />
     <ClInclude Include="include\transform_manipulate_system.h" />
     <ClInclude Include="include\transform_manipulator_ui_component.h" />
     <ClInclude Include="src\pch.h" />
@@ -377,6 +380,7 @@
     <ClCompile Include="src\entity_editor_system.cpp" />
     <ClCompile Include="src\hierarchy_drawer.cpp" />
     <ClCompile Include="src\hierarchy_ui_component.cpp" />
+    <ClCompile Include="src\import_helper.cpp" />
     <ClCompile Include="src\inspector_drawer.cpp" />
     <ClCompile Include="src\inspector_ui_component.cpp" />
     <ClCompile Include="src\manipulator_drawer.cpp" />
@@ -398,6 +402,8 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug_Memory|x64'">_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="src\project_io_component.cpp" />
+    <ClCompile Include="src\project_io_system.cpp" />
     <ClCompile Include="src\transform_manipulate_system.cpp" />
     <ClCompile Include="src\transform_manipulator_ui_component.cpp" />
   </ItemGroup>

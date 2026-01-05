@@ -3,6 +3,7 @@
 #include <any>
 
 #include "mono_service/include/service_command.h"
+#include "mono_service/include/service_proxy_manager.h"
 
 #include "mono_entity_archive_service/include/dll_config.h"
 #include "mono_entity_archive_service/include/entity_archive_service.h"
@@ -46,6 +47,26 @@ public:
 
     // Erase setup param for a material from the entity archive service
     void EraseSetupParam(render_graph::MaterialHandle material_handle);
+
+    // Export setup params of entities to a file
+    void ExportComponentSetupParamsToFile(
+        const std::string& file_path, std::vector<ecs::Entity> entities, 
+        mono_service::ServiceProxyManager& service_proxy_manager);
+
+    // Export setup params of entities to a file
+    void ExportComponentSetupParamsToFile(
+        const std::wstring& file_path, std::vector<ecs::Entity> entities, 
+        mono_service::ServiceProxyManager& service_proxy_manager);
+
+    // Export setup params of materials to a file
+    void ExportMaterialSetupParamsToFile(
+        const std::string& file_path, std::vector<render_graph::MaterialHandle> material_handles,
+        mono_service::ServiceProxyManager& service_proxy_manager);
+
+    // Export setup params of materials to a file
+    void ExportMaterialSetupParamsToFile(
+        const std::wstring& file_path, std::vector<render_graph::MaterialHandle> material_handles,
+        mono_service::ServiceProxyManager& service_proxy_manager);
 };
 
 } // namespace mono_entity_archive_service

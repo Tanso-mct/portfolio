@@ -1,5 +1,5 @@
-#include "component_editor_test/pch.h"
-#include "component_editor_test/tests/test_meta_component.h"
+#include "mono_entity_archive_service_test/pch.h"
+#include "mono_entity_archive_service_test/tests/test_meta_component.h"
 
 namespace component_editor_test
 {
@@ -60,6 +60,12 @@ bool TestMetaComponentAdder::Add(
     // Add component to the world
     return world.AddComponent<TestMetaComponent>(
         entity, TestMetaComponentHandle::ID(), std::move(setup_param));
+}
+
+std::unique_ptr<ecs::Component::SetupParam> TestMetaComponentAdder::GetSetupParam(
+    mono_service::ServiceProxyManager& service_proxy_manager) const
+{
+    return std::make_unique<TestMetaComponent::SetupParam>();
 }
 
 } // namespace component_editor_test

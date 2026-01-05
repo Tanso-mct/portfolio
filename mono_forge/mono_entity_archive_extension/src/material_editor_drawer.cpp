@@ -216,14 +216,14 @@ render_graph::ImguiPass::DrawFunc MaterialEditorDrawer::CreateDrawFunc()
             {
                 // Get all registered material type handle IDs from entity archive service view
                 std::vector<render_graph::MaterialTypeHandleID> material_type_handle_ids
-                    = entity_archive_service_view_ptr->GetMaterialSetupParamEditorRegistry()().GetRegisteredMaterialTypeHandleIDs();
+                    = entity_archive_service_view_ptr->GetMaterialSetupParamEditorRegistry().GetRegisteredMaterialTypeHandleIDs();
                 assert(!material_type_handle_ids.empty() && "No registered material type handle IDs found!");
 
                 for (const auto& material_type_handle_id : material_type_handle_ids)
                 {
                     // Get material type name
                     const std::string& material_type_name
-                        = entity_archive_service_view_ptr->GetMaterialSetupParamEditorRegistry()().GetMaterialTypeName(material_type_handle_id);
+                        = entity_archive_service_view_ptr->GetMaterialSetupParamEditorRegistry().GetMaterialTypeName(material_type_handle_id);
 
                     // Create menu item for each material type
                     if (ImGui::MenuItem(material_type_name.c_str()))

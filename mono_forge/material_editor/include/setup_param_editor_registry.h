@@ -20,7 +20,8 @@ public:
     void RegisterSetupParamEditor(
         render_graph::MaterialTypeHandleID material_type_handle_id, 
         std::string material_type_name,
-        SetupParamEditFunc<Args...> edit_func, MaterialCreateFunc<Args...> create_func)
+        SetupParamEditFunc<Args...> edit_func, MaterialCreateFunc<Args...> create_func,
+        SetupParamExportFunc<Args...> export_func, MaterialImportFunc<Args...> import_func)
     {
         // Register material type name
         assert(
@@ -39,6 +40,18 @@ public:
             create_func_map_.find(material_type_handle_id) == create_func_map_.end()
             && "Setup param creator already registered for this material type handle ID.");
         create_func_map_[material_type_handle_id] = std::move(create_func);
+
+        // Register export function
+        assert(
+            export_func_map_.find(material_type_handle_id) == export_func_map_.end()
+            && "Setup param exporter already registered for this material type handle ID.");
+        export_func_map_[material_type_handle_id] = std::move(export_func);
+
+        // Register import function
+        assert(
+            import_func_map_.find(material_type_handle_id) == import_func_map_.end()
+            && "Setup param importer already registered for this material type handle ID.");
+        import_func_map_[material_type_handle_id] = std::move(import_func);
     }
 
     // Get the material type name for a material type handle ID
@@ -68,6 +81,24 @@ public:
         return it->second;
     }
 
+    // Get the setup param exporter function for a material type handle ID
+    const SetupParamExportFunc<Args...>& GetSetupParamExporter(render_graph::MaterialTypeHandleID material_type_handle_id) const
+    {
+        auto it = export_func_map_.find(material_type_handle_id);
+        assert(it != export_func_map_.end() && "Setup param exporter not found for this material type handle ID.");
+
+        return it->second;
+    }
+
+    // Get the setup param importer function for a material type handle ID
+    const MaterialImportFunc<Args...>& GetSetupParamImporter(render_graph::MaterialTypeHandleID material_type_handle_id) const
+    {
+        auto it = import_func_map_.find(material_type_handle_id);
+        assert(it != import_func_map_.end() && "Setup param importer not found for this material type handle ID.");
+
+        return it->second;
+    }
+
     // Get all registered material type handle IDs
     std::vector<render_graph::MaterialTypeHandleID> GetRegisteredMaterialTypeHandleIDs() const
     {
@@ -87,6 +118,12 @@ private:
 
     // The map from material type handle ID to setup param create function
     std::unordered_map<render_graph::MaterialTypeHandleID, MaterialCreateFunc<Args...>> create_func_map_;
+
+    // The map from material type handle ID to setup param export function
+    std::unordered_map<render_graph::MaterialTypeHandleID, SetupParamExportFunc<Args...>> export_func_map_;
+
+    // The map from material type handle ID to setup param import function
+    std::unordered_map<render_graph::MaterialTypeHandleID, MaterialImportFunc<Args...>> import_func_map_;
 };
 
 // The registrar for setup param editors
@@ -99,10 +136,12 @@ public:
         SetupParamEditorRegistry<Args...>& registry,
         render_graph::MaterialTypeHandleID material_type_handle_id, 
         std::string material_type_name,
-        SetupParamEditFunc<Args...> edit_func, MaterialCreateFunc<Args...> create_func)
+        SetupParamEditFunc<Args...> edit_func, MaterialCreateFunc<Args...> create_func,
+        SetupParamExportFunc<Args...> export_func, MaterialImportFunc<Args...> import_func)
     {
         registry.RegisterSetupParamEditor(
-            material_type_handle_id, material_type_name, std::move(edit_func), std::move(create_func));
+            material_type_handle_id, material_type_name, 
+            std::move(edit_func), std::move(create_func), std::move(export_func), std::move(import_func));
     }
 };
 

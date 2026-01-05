@@ -62,10 +62,10 @@ render_graph::ImguiPass::DrawFunc InspectorDrawer::CreateDrawFunc()
                 std::string search_str(component_search_buf);
 
                 // Get component name map
-                utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> component_name_map
+                const component_editor::ComponentNameMap& component_name_map
                     = service_view_ptr->GetComponentNameMap();
 
-                for (const auto& [component_id, component_name] : component_name_map())
+                for (const auto& [component_id, component_name] : component_name_map)
                 {
                     // If the component is editable
                     if (service_view_ptr->CheckComponentEditable(component_id))
@@ -100,12 +100,12 @@ render_graph::ImguiPass::DrawFunc InspectorDrawer::CreateDrawFunc()
             std::string_view component_name;
             {
                 // Get component name map
-                utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> component_name_map
+                const component_editor::ComponentNameMap& component_name_map
                     = service_view_ptr->GetComponentNameMap();
 
                 // Get component name
-                auto name_it = component_name_map().find(component_id);
-                assert(name_it != component_name_map().end() && "Component ID not found in component name map.");
+                auto name_it = component_name_map.find(component_id);
+                assert(name_it != component_name_map.end() && "Component ID not found in component name map.");
                 component_name = name_it->second;
             }
 
@@ -132,7 +132,7 @@ render_graph::ImguiPass::DrawFunc InspectorDrawer::CreateDrawFunc()
                 {
                     // Get field value edit function
                     const mono_entity_archive_service::ComponentSetupParamAnyFieldEditFunc& edit_func
-                        = service_view_ptr->GetSetupParamFieldTypeRegistry()->GetSetupParamFieldEditFunc(field_info.type_name);
+                        = service_view_ptr->GetSetupParamFieldTypeRegistry().GetSetupParamFieldEditFunc(field_info.type_name);
 
                     // Edit the field value
                     bool edited = edit_func(field_info.value, field_info.name, service_proxy_manager_);
@@ -215,7 +215,7 @@ void InspectorDrawer::UpdateFieldValue()
 
             // Get setup param field create function
             const mono_entity_archive_service::ComponentSetupParamAnyFieldCreateFunc& create_func
-                = service_view_ptr->GetSetupParamFieldTypeRegistry()->GetSetupParamFieldCreateFunc(field_info.type_name);
+                = service_view_ptr->GetSetupParamFieldTypeRegistry().GetSetupParamFieldCreateFunc(field_info.type_name);
 
             // Update field value as std::any
             field_info.value = create_func(field_value, service_proxy_manager_);

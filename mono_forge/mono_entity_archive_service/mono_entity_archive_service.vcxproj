@@ -349,6 +349,7 @@
     <ClInclude Include="include\entity_archive_service.h" />
     <ClInclude Include="include\entity_archive_service_command_list.h" />
     <ClInclude Include="include\entity_archive_service_view.h" />
+    <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>

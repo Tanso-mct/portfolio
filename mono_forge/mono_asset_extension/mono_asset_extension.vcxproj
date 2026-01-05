@@ -351,6 +351,7 @@
     <ClInclude Include="include\asset_request_processor_system.h" />
     <ClInclude Include="include\asset_source_creator.h" />
     <ClInclude Include="include\dll_config.h" />
+    <ClInclude Include="include\import_helper.h" />
     <ClInclude Include="include\mesh_asset.h" />
     <ClInclude Include="include\texture_asset.h" />
     <ClInclude Include="src\pch.h" />
@@ -360,6 +361,7 @@
     <ClCompile Include="src\asset_loader_set.cpp" />
     <ClCompile Include="src\asset_request_component.cpp" />
     <ClCompile Include="src\asset_request_processor_system.cpp" />
+    <ClCompile Include="src\import_helper.cpp" />
     <ClCompile Include="src\mesh_asset.cpp" />
     <ClCompile Include="src\phc.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

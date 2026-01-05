@@ -1,0 +1,29 @@
+{
+    "entities": [
+        {
+            "component_editor_test::TestMetaComponent": {
+                "active_self": true,
+                "layer": 0,
+                "name": "Unnamed",
+                "tag": 0
+            },
+            "component_editor_test::TestTransformComponent": {
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ]
+}

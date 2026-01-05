@@ -28,8 +28,20 @@ public:
     // Get the type name of the asset
     virtual std::string_view GetTypeName() const { return DEFAULT_ASSET_TYPE_NAME; }
 
+    // Get the file path of the asset
+    // If the asset does not use any file, it can return an empty string
+    std::string_view GetFilePath() const { return file_path_; }
+
+    // Set the file path of the asset
+    void SetFilePath(const std::string& file_path) { file_path_ = file_path; }
+
 private:
+    // Name
     mutable std::string name_ = DEFFAULT_ASSET_NAME;
+
+    // File path
+    std::string file_path_;
+
 };
 
 } // namespace asset_loader

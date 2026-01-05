@@ -11,6 +11,8 @@
 namespace render_graph
 {
 
+constexpr const char* PHONG_MATERIAL_TYPE_NAME = "PhongMaterial";
+
 // Material type handle
 class RENDER_GRAPH_DLL PhongMaterialTypeHandle : public MaterialTypeHandle<PhongMaterialTypeHandle> {};
 
@@ -151,6 +153,11 @@ public:
         std::unique_ptr<Material::SetupParam> Clone() const override
         {
             return std::make_unique<SetupParam>(*this);
+        }
+
+        MaterialTypeHandleID GetMaterialTypeHandleID() const override
+        {
+            return PhongMaterialTypeHandle::ID();
         }
 
         // Debug name prefix

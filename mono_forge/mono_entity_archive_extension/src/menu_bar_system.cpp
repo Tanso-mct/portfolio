@@ -1,12 +1,15 @@
 #include "mono_entity_archive_extension/src/pch.h"
 #include "mono_entity_archive_extension/include/menu_bar_system.h"
 
+#include "utility_header/logger.h"
+
 #include "ecs/include/world.h"
 
 #include "mono_meta_extension/include/meta_component.h"
 #include "mono_graphics_extension/include/ui_component.h"
 #include "mono_entity_archive_extension/include/menu_bar_ui_component.h"
 #include "mono_entity_archive_extension/include/menu_bar_drawer.h"
+#include "mono_entity_archive_extension/include/project_io_component.h"
 
 namespace mono_entity_archive_extension
 {
@@ -89,6 +92,28 @@ bool MenuBarSystem::Update(ecs::World& world)
 
         if (menu_bar_drawer->IsShowMaterialEditorRequested())
             ShowUI(menu_bar_ui_component->GetMaterialEditorEntity(), world);
+
+        if (menu_bar_drawer->IsProjectSetRequested())
+        {
+            // Get project io component from project io entity
+            ProjectIOComponent* project_io_component
+                = world.GetComponent<ProjectIOComponent>(
+                    menu_bar_ui_component->GetProjectIOEntity(), ProjectIOComponentHandle::ID());
+            assert(project_io_component != nullptr && "ProjectIOComponent is null!");
+
+            project_io_component->SetImportRequested(true);
+        }
+
+        if (menu_bar_drawer->IsSaveRequested())
+        {
+            // Get project io component from project io entity
+            ProjectIOComponent* project_io_component
+                = world.GetComponent<ProjectIOComponent>(
+                    menu_bar_ui_component->GetProjectIOEntity(), ProjectIOComponentHandle::ID());
+            assert(project_io_component != nullptr && "ProjectIOComponent is null!");
+
+            project_io_component->SetExportRequested(true);
+        }
     }
 
     return true; // Success

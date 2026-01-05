@@ -25,6 +25,9 @@ public:
 
         // Clone the setup param
         virtual std::unique_ptr<SetupParam> Clone() const { return nullptr; }
+
+        // Get material type handle ID
+        virtual MaterialTypeHandleID GetMaterialTypeHandleID() const = 0;
     };
 
     // Setup the material with given parameters

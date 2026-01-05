@@ -37,6 +37,9 @@ public:
         // The entity which holds the material editor UI
         ecs::Entity material_editor_entity_ = ecs::Entity();
 
+        // The entity which holds the project set request component
+        ecs::Entity project_io_entity_ = ecs::Entity();
+
     }; //REFLECTABLE_SETUP_PARAM_END//
 
     virtual bool Setup(ecs::Component::SetupParam& param) override;
@@ -55,6 +58,9 @@ public:
     // Get the entity which holds the material editor UI
     ecs::Entity GetMaterialEditorEntity() const { return material_editor_entity_; }
 
+    // Get the entity which holds the project io component
+    ecs::Entity GetProjectIOEntity() const { return project_io_entity_; }
+
 private:
     // The entity which holds the hierarchy UI
     ecs::Entity hierarchy_entity_ = ecs::Entity();
@@ -67,6 +73,9 @@ private:
 
     // The entity which holds the material editor UI
     ecs::Entity material_editor_entity_ = ecs::Entity();
+
+    // The entity which holds the project io component
+    ecs::Entity project_io_entity_ = ecs::Entity();
 
 }; //REFLECTABLE_COMMENT_END//
 

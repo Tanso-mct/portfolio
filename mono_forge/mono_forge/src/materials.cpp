@@ -1,6 +1,8 @@
 ﻿#include "mono_forge/src/pch.h"
 #include "mono_forge/include/materials.h"
 
+#include "utility_header/win32.h"
+
 #include "imgui/include/imgui.h"
 #include "imgui/include/imgui_internal.h"
 
@@ -323,6 +325,202 @@ mono_entity_archive_service::MaterialSetupParamEditorRegistrar g_lambert_materia
         entity_archive_service_proxy->SubmitCommandList(std::move(entity_archive_command_list));
 
         return true; // Indicate created
+    },
+    [](
+        const material_editor::SetupParamWrapper* setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        // Cast to LambertMaterial::SetupParam
+        const render_graph::LambertMaterial::SetupParam* lambert_param_ptr
+            = dynamic_cast<const render_graph::LambertMaterial::SetupParam*>(setup_param->GetSetupParam());
+        assert(lambert_param_ptr != nullptr && "Invalid setup param type for Lambert material");
+
+        // Cast to LambertMaterialAdditionalSetupParam
+        const mono_entity_archive_extension::LambertMaterialAdditionalSetupParam* lambert_additional_param_ptr
+            = dynamic_cast<const mono_entity_archive_extension::LambertMaterialAdditionalSetupParam*>(
+                setup_param->GetAdditionalParam());
+        assert(lambert_additional_param_ptr != nullptr && "Invalid additional setup param type for Lambert material");
+
+        // Get asset service proxy, graphics service proxy, entity archive service proxy
+        std::unique_ptr<mono_service::ServiceProxy> asset_service_proxy = nullptr;
+        service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& service_proxy_manager_inner)
+        {
+            asset_service_proxy 
+                = service_proxy_manager_inner.GetServiceProxy(mono_asset_service::AssetServiceHandle::ID()).Clone();
+        });
+
+        // Create asset service view
+        std::unique_ptr<mono_service::ServiceView> asset_service_view = asset_service_proxy->CreateView();
+        mono_asset_service::AssetServiceView* asset_service_view_ptr
+            = dynamic_cast<mono_asset_service::AssetServiceView*>(asset_service_view.get());
+        assert(asset_service_view_ptr != nullptr && "Asset service view is null!");
+
+        // Get material handle manager
+        render_graph::MaterialHandleManager& material_handle_manager
+            = render_graph::MaterialHandleManager::GetInstance();
+
+        // Create JSON object
+        nlohmann::json json_obj;
+
+        // Debug name
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["debug_name_prefix"] = lambert_param_ptr->debug_name_prefix;
+
+        // Base color
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["base_color"] = {
+            lambert_param_ptr->base_color.x,
+            lambert_param_ptr->base_color.y,
+            lambert_param_ptr->base_color.z,
+            lambert_param_ptr->base_color.w};
+
+        // Albedo source
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["albedo_source"] = lambert_param_ptr->albedo_source;
+
+        // Normal source
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["normal_source"] = lambert_param_ptr->normal_source;
+
+        // AO source
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["ao_source"] = lambert_param_ptr->ao_source;
+
+        // Emission source
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["emission_source"] = lambert_param_ptr->emission_source;
+
+        // Emission color
+        json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["emission_color"] = {
+            lambert_param_ptr->emission_color.x,
+            lambert_param_ptr->emission_color.y,
+            lambert_param_ptr->emission_color.z,
+            lambert_param_ptr->emission_color.w};
+
+        // Albedo texture asset name
+        {
+            const asset_loader::Asset& albedo_texture_asset
+                = asset_service_view_ptr->GetAsset(lambert_additional_param_ptr->GetAlbedoTextureAssetID());
+            json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["albedo_texture_asset_name"] = albedo_texture_asset.GetName();
+        }
+
+        // Normal texture asset name
+        {
+            const asset_loader::Asset& normal_texture_asset
+                = asset_service_view_ptr->GetAsset(lambert_additional_param_ptr->GetNormalTextureAssetID());
+            json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["normal_texture_asset_name"] = normal_texture_asset.GetName();
+        }
+
+        // AO texture asset name
+        {
+            const asset_loader::Asset& ao_texture_asset
+                = asset_service_view_ptr->GetAsset(lambert_additional_param_ptr->GetAOTextureAssetID());
+            json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["ao_texture_asset_name"] = ao_texture_asset.GetName();
+        }
+
+        // Emission texture asset name
+        {
+            const asset_loader::Asset& emission_texture_asset
+                = asset_service_view_ptr->GetAsset(lambert_additional_param_ptr->GetEmissionTextureAssetID());
+            json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME]["emission_texture_asset_name"] = emission_texture_asset.GetName();
+        }
+
+        return json_obj;
+    },
+    [](
+        const nlohmann::json& json_obj,
+        mono_service::ServiceProxyManager& service_proxy_manager) -> bool
+    {
+        // // Get lambert material json object
+        // const nlohmann::json& lambert_json_obj = json_obj[render_graph::LAMBERT_MATERIAL_TYPE_NAME];
+
+        // // Get asset service proxy, graphics service proxy, entity archive service proxy
+        // std::unique_ptr<mono_service::ServiceProxy> asset_service_proxy = nullptr;
+        // std::unique_ptr<mono_service::ServiceProxy> graphics_service_proxy = nullptr;
+        // service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& service_proxy_manager_inner)
+        // {
+        //     asset_service_proxy 
+        //         = service_proxy_manager_inner.GetServiceProxy(mono_asset_service::AssetServiceHandle::ID()).Clone();
+
+        //     graphics_service_proxy 
+        //         = service_proxy_manager_inner.GetServiceProxy(mono_graphics_service::GraphicsServiceHandle::ID()).Clone();
+        // });
+
+        // // Create asset service view
+        // std::unique_ptr<mono_service::ServiceView> asset_service_view = asset_service_proxy->CreateView();
+        // mono_asset_service::AssetServiceView* asset_service_view_ptr
+        //     = dynamic_cast<mono_asset_service::AssetServiceView*>(asset_service_view.get());
+        // assert(asset_service_view_ptr != nullptr && "Asset service view is null!");
+
+        // // Create graphics service command list
+        // std::unique_ptr<mono_service::ServiceCommandList> graphics_command_list = graphics_service_proxy->CreateCommandList();
+        // mono_graphics_service::GraphicsCommandList* graphics_command_list_ptr
+        //     = dynamic_cast<mono_graphics_service::GraphicsCommandList*>(graphics_command_list.get());
+        // assert(graphics_command_list_ptr != nullptr && "Graphics command list is null!");
+
+        // // Get material handle manager
+        // render_graph::MaterialHandleManager& material_handle_manager
+        //     = render_graph::MaterialHandleManager::GetInstance();
+
+        // // Create lambert material setup parameter
+        // std::unique_ptr<render_graph::LambertMaterial::SetupParam> lambert_material_param
+        //     = std::make_unique<render_graph::LambertMaterial::SetupParam>();
+        // lambert_material_param->debug_name_prefix 
+        //     = utility_header::StringToWstring(lambert_json_obj["debug_name_prefix"].get<std::string>());
+        // lambert_material_param->base_color = DirectX::XMFLOAT4(
+        //     lambert_json_obj["base_color"][0].get<float>(),
+        //     lambert_json_obj["base_color"][1].get<float>(),
+        //     lambert_json_obj["base_color"][2].get<float>(),
+        //     lambert_json_obj["base_color"][3].get<float>());
+        // lambert_material_param->albedo_source = lambert_json_obj["albedo_source"].get<uint32_t>();
+        // lambert_material_param->normal_source = lambert_json_obj["normal_source"].get<uint32_t>();
+        // lambert_material_param->ao_source = lambert_json_obj["ao_source"].get<uint32_t>();
+        // lambert_material_param->emission_source = lambert_json_obj["emission_source"].get<uint32_t>();
+        // lambert_material_param->emission_color = DirectX::XMFLOAT4(
+        //     lambert_json_obj["emission_color"][0].get<float>(),
+        //     lambert_json_obj["emission_color"][1].get<float>(),
+        //     lambert_json_obj["emission_color"][2].get<float>(),
+        //     lambert_json_obj["emission_color"][3].get<float>());
+
+        // // Get texture assets and set texture handles
+        // {
+        //     const asset_loader::Asset& albedo_texture_asset
+        //         = asset_service_view_ptr->GetAsset(
+        //             asset_service_view_ptr->GetAssetHandleIDByName(
+        //                 lambert_json_obj["albedo_texture_asset_name"].get<std::string>()));
+        //     const mono_asset_extension::TextureAsset* albedo_texture_asset_ptr
+        //         = dynamic_cast<const mono_asset_extension::TextureAsset*>(&albedo_texture_asset);
+        //     lambert_material_param->albedo_texture_handle = albedo_texture_asset_ptr->GetTextureHandle();
+        // }
+        // {
+        //     const asset_loader::Asset& normal_texture_asset
+        //         = asset_service_view_ptr->GetAsset(
+        //             asset_service_view_ptr->GetAssetHandleIDByName(
+        //                 lambert_json_obj["normal_texture_asset_name"].get<std::string>()));
+        //     const mono_asset_extension::TextureAsset* normal_texture_asset_ptr
+        //         = dynamic_cast<const mono_asset_extension::TextureAsset*>(&normal_texture_asset);
+        //     lambert_material_param->normal_texture_handle = normal_texture_asset_ptr->GetTextureHandle();
+        // }
+        // {
+        //     const asset_loader::Asset& ao_texture_asset
+        //         = asset_service_view_ptr->GetAsset(
+        //             asset_service_view_ptr->GetAssetHandleIDByName(
+        //                 lambert_json_obj["ao_texture_asset_name"].get<std::string>()));
+        //     const mono_asset_extension::TextureAsset* ao_texture_asset_ptr
+        //         = dynamic_cast<const mono_asset_extension::TextureAsset*>(&ao_texture_asset);
+        //     lambert_material_param->ao_texture_handle = ao_texture_asset_ptr->GetTextureHandle();
+        // }
+        // {
+        //     const asset_loader::Asset& emission_texture_asset
+        //         = asset_service_view_ptr->GetAsset(
+        //             asset_service_view_ptr->GetAssetHandleIDByName(
+        //                 lambert_json_obj["emission_texture_asset_name"].get<std::string>()));
+        //     const mono_asset_extension::TextureAsset* emission_texture_asset_ptr
+        //         = dynamic_cast<const mono_asset_extension::TextureAsset*>(&emission_texture_asset);
+        //     lambert_material_param->emission_texture_handle = emission_texture_asset_ptr->GetTextureHandle();
+        // }
+
+        // // Generate new material handle key
+        // render_graph::MaterialHandleKey new_key = render_graph::MaterialHandleKeyGenerator::GetInstance().Generate();
+
+        // // Register material handle
+        // material_handle_manager.RegisterMaterialHandle(new_key, 
+
+        return true;
     });
 
 mono_entity_archive_service::MaterialSetupParamEditorRegistrar g_phong_material_editor_registrar(
@@ -624,6 +822,141 @@ mono_entity_archive_service::MaterialSetupParamEditorRegistrar g_phong_material_
         entity_archive_service_proxy->SubmitCommandList(std::move(entity_archive_command_list));
 
         return true; // Indicate created
+    },
+    [](const material_editor::SetupParamWrapper* setup_param,
+        mono_service::ServiceProxyManager& service_proxy_manager) -> nlohmann::json
+    {
+        // Cast to PhongMaterial::SetupParam
+        const render_graph::PhongMaterial::SetupParam* phong_param_ptr
+            = dynamic_cast<const render_graph::PhongMaterial::SetupParam*>(setup_param->GetSetupParam());
+        assert(phong_param_ptr != nullptr && "Invalid setup param type for Phong material");
+
+        // Cast to PhongMaterialAdditionalSetupParam
+        const mono_entity_archive_extension::PhongMaterialAdditionalSetupParam* phong_additional_param_ptr
+            = dynamic_cast<const mono_entity_archive_extension::PhongMaterialAdditionalSetupParam*>(
+                setup_param->GetAdditionalParam());
+        assert(phong_additional_param_ptr != nullptr && "Invalid additional setup param type for Phong material");
+
+        // Get asset service proxy, graphics service proxy, entity archive service proxy
+        std::unique_ptr<mono_service::ServiceProxy> asset_service_proxy = nullptr;
+        service_proxy_manager.WithLock([&](mono_service::ServiceProxyManager& service_proxy_manager_inner)
+        {
+            asset_service_proxy 
+                = service_proxy_manager_inner.GetServiceProxy(mono_asset_service::AssetServiceHandle::ID()).Clone();
+        });
+
+        // Create asset service view
+        std::unique_ptr<mono_service::ServiceView> asset_service_view = asset_service_proxy->CreateView();
+        mono_asset_service::AssetServiceView* asset_service_view_ptr
+            = dynamic_cast<mono_asset_service::AssetServiceView*>(asset_service_view.get());
+        assert(asset_service_view_ptr != nullptr && "Asset service view is null!");
+
+        // Get material handle manager
+        render_graph::MaterialHandleManager& material_handle_manager
+            = render_graph::MaterialHandleManager::GetInstance();
+
+        // Create JSON object
+        nlohmann::json json_obj;
+
+        // Debug name prefix
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["debug_name_prefix"] = phong_param_ptr->debug_name_prefix;
+
+        // Base color
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["base_color"] = {
+            phong_param_ptr->base_color.x,
+            phong_param_ptr->base_color.y,
+            phong_param_ptr->base_color.z,
+            phong_param_ptr->base_color.w};
+
+        // Albedo source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["albedo_source"] = phong_param_ptr->albedo_source;
+
+        // Normal source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["normal_source"] = phong_param_ptr->normal_source;
+
+        // AO source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["ao_source"] = phong_param_ptr->ao_source;
+
+        // Specular source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["specular_source"] = phong_param_ptr->specular_source;
+
+        // Roughness source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["roughness_source"] = phong_param_ptr->roughness_source;
+
+        // Roughness value
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["roughness_value"] = phong_param_ptr->roughness_value;
+
+        // Metalness source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["metalness_source"] = phong_param_ptr->metalness_source;
+
+        // Metalness value
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["metalness_value"] = phong_param_ptr->metalness_value;
+
+        // Emission source
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["emission_source"] = phong_param_ptr->emission_source;
+
+        // Emission color
+        json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["emission_color"] = {
+            phong_param_ptr->emission_color.x,
+            phong_param_ptr->emission_color.y,
+            phong_param_ptr->emission_color.z,
+            phong_param_ptr->emission_color.w};
+
+        // Albedo texture asset name
+        {
+            const asset_loader::Asset& albedo_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetAlbedoTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["albedo_texture_asset_name"] = albedo_texture_asset.GetName();
+        }
+
+        // Normal texture asset name
+        {
+            const asset_loader::Asset& normal_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetNormalTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["normal_texture_asset_name"] = normal_texture_asset.GetName();
+        }
+
+        // AO texture asset name
+        {
+            const asset_loader::Asset& ao_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetAOTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["ao_texture_asset_name"] = ao_texture_asset.GetName();
+        }
+
+        // Specular texture asset name
+        {
+            const asset_loader::Asset& specular_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetSpecularTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["specular_texture_asset_name"] = specular_texture_asset.GetName();
+        }
+
+        // Roughness texture asset name
+        {
+            const asset_loader::Asset& roughness_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetRoughnessTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["roughness_texture_asset_name"] = roughness_texture_asset.GetName();
+        }
+
+        // Metalness texture asset name
+        {
+            const asset_loader::Asset& metalness_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetMetalnessTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["metalness_texture_asset_name"] = metalness_texture_asset.GetName();
+        }
+
+        // Emission texture asset name
+        {
+            const asset_loader::Asset& emission_texture_asset
+                = asset_service_view_ptr->GetAsset(phong_additional_param_ptr->GetEmissionTextureAssetID());
+            json_obj[render_graph::PHONG_MATERIAL_TYPE_NAME]["emission_texture_asset_name"] = emission_texture_asset.GetName();
+        }
+
+        return json_obj;
+    },
+    [](const nlohmann::json& json_obj,
+        mono_service::ServiceProxyManager& service_proxy_manager) -> bool
+    {
+        return true;
     });
 
 //MATERIAL_SETUP_PARAM_EDITOR_REGISTRAR_END//

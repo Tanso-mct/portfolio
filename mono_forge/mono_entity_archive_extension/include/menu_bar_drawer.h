@@ -28,7 +28,14 @@ public:
     // Check if showing asset browser has been requested
     bool IsShowAssetBrowserRequested() const { return show_asset_browser_requested_; }
 
+    // Check if showing material editor has been requested
     bool IsShowMaterialEditorRequested() const { return show_material_editor_requested_; }
+
+    // Check if save has been requested
+    bool IsSaveRequested() const { return save_requested_; }
+
+    // Check if project setup has been requested
+    bool IsProjectSetRequested() const { return project_set_requested_; }
 
 private:
     // Reset all requests
@@ -36,6 +43,12 @@ private:
 
     // Indicates whether quit has been requested
     bool quit_requested_ = false;
+
+    // Indicates whether save has been requested
+    bool save_requested_ = false;
+
+    // Indicates whether project setup has been requested
+    bool project_set_requested_ = false;
 
     // Indicates whether showing hierarchy has been requested
     bool show_hierarchy_requested_ = false;

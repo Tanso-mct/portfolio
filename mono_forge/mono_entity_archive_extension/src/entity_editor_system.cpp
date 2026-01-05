@@ -132,7 +132,7 @@ void CreateEntityByHierarchy(
     assert(entity_archive_service_view != nullptr && "Entity archive service view is null!");
 
     // Get component adder map
-    utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> component_adder_map
+    const component_editor::ComponentAdderMap& component_adder_map
         = entity_archive_service_view->GetComponentAdderMap();
 
     // Meta component
@@ -373,11 +373,11 @@ bool EntityEditorSystem::Update(ecs::World& world)
                     continue; // Not editable, skip
 
                 // Get component field map
-                utility_header::ConstSharedLockedValue<component_editor::FieldMap> field_map
+                const component_editor::FieldMap& field_map
                     = entity_archive_service_view->GetComponentFieldMap(component_id);
 
                 // Add fields to inspector drawer
-                inspector_drawer->AddField(component_id, field_map());
+                inspector_drawer->AddField(component_id, field_map);
             }
         }
 
@@ -399,12 +399,12 @@ bool EntityEditorSystem::Update(ecs::World& world)
             assert(entity_archive_service_view != nullptr && "Entity archive service view is null!");
 
             // Get component adder map
-            utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> component_adder_map
+            const component_editor::ComponentAdderMap& component_adder_map
                 = entity_archive_service_view->GetComponentAdderMap();
 
             // Find component adder for the added component ID
-            auto adder_it = component_adder_map().find(added_component_id);
-            assert(adder_it != component_adder_map().end() && "This component does not have a component adder!");
+            auto adder_it = component_adder_map.find(added_component_id);
+            assert(adder_it != component_adder_map.end() && "This component does not have a component adder!");
             component_editor::ComponentAdder* component_adder = adder_it->second.get();
             assert(component_adder != nullptr && "Component adder is null!");
 
@@ -488,7 +488,7 @@ bool EntityEditorSystem::Update(ecs::World& world)
         for (const component_editor::EditedInfo& edited_info : edited_infos)
         {
             // Get setup param from entity archive service view
-            utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> setup_param
+            const ecs::Component::SetupParam& setup_param
                 = entity_archive_service_view->GetSetupParam(edited_info.entity, edited_info.component_id);
 
             // Get component
@@ -497,7 +497,7 @@ bool EntityEditorSystem::Update(ecs::World& world)
             assert(component != nullptr && "Edited entity must have the edited component");
 
             // Apply changes to the component
-            if (!component->Apply(setup_param()))
+            if (!component->Apply(setup_param))
                 assert(false && "Failed to apply changes to the component");
         }
     }

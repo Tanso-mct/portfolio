@@ -26,6 +26,9 @@ public:
     // Check if the entity's component has setup parameters
     bool ContainSetupParam(ecs::Entity entity, ecs::ComponentID component_id);
 
+    // Get all component IDs that have setup parameters for the entity
+    std::vector<ecs::ComponentID> GetComponentIDs(ecs::Entity entity) const;
+
 private:
     // The reference to the entity setup parameter map
     EntitySetupParamMap& entity_setup_param_map_;

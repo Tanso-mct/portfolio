@@ -1,0 +1,49 @@
+{
+    "assets": [
+        {
+            "file_path": "../resources/render_graph_test/marble_bust_01_1k/marble_bust_01_diff_1k.png",
+            "name": "marble_bust_01_diff_1k",
+            "type": "Texture"
+        },
+        {
+            "file_path": "../resources/render_graph_test/marble_bust_01_1k/marble_bust_01_nor_dx_1k.png",
+            "name": "marble_bust_01_nor_dx_1k",
+            "type": "Texture"
+        },
+        {
+            "file_path": "../resources/render_graph_test/marble_bust_01_1k/marble_bust_01_ao_1k.png",
+            "name": "marble_bust_01_ao_1k",
+            "type": "Texture"
+        },
+        {
+            "file_path": "../resources/render_graph_test/marble_bust_01_1k/marble_bust_01_rough_1k.png",
+            "name": "marble_bust_01_rough_1k",
+            "type": "Texture"
+        },
+        {
+            "file_path": "../resources/mono_forge/box.mfm",
+            "name": "box",
+            "type": "Mesh"
+        },
+        {
+            "file_path": "../resources/render_graph_test/marble_bust_01_1k/marble_bust_01_1k.mfm",
+            "name": "marble_bust_01_1k",
+            "type": "Mesh"
+        },
+        {
+            "file_path": "../resources/render_graph_test/floor/floor.mfm",
+            "name": "floor",
+            "type": "Mesh"
+        },
+        {
+            "file_path": "model.mfm",
+            "name": "sofa_model",
+            "type": "Mesh"
+        },
+        {
+            "file_path": "albedo.png",
+            "name": "sofa_albedo",
+            "type": "Texture"
+        }
+    ]
+}

@@ -131,6 +131,12 @@ std::unique_ptr<mono_service::ServiceView> EntityArchiveService::CreateView()
     return std::make_unique<EntityArchiveServiceView>(GetAPI());
 }
 
+const component_editor::SetupParamManager& EntityArchiveService::GetSetupParamManager() const
+{
+    assert(IsSetup() && "Service is not set up");
+    return *entity_setup_param_manager_;
+}
+
 component_editor::SetupParamAdder& EntityArchiveService::GetSetupParamAdder()
 {
     assert(IsSetup() && "Service is not set up");
@@ -144,6 +150,12 @@ component_editor::SetupParamEraser& EntityArchiveService::GetSetupParamEraser()
 }
 
 component_editor::SetupParamEditor& EntityArchiveService::GetSetupParamEditor()
+{
+    assert(IsSetup() && "Service is not set up");
+    return *entity_setup_param_editor_;
+}
+
+const component_editor::SetupParamEditor& EntityArchiveService::GetSetupParamEditor() const
 {
     assert(IsSetup() && "Service is not set up");
     return *entity_setup_param_editor_;
@@ -176,12 +188,9 @@ bool EntityArchiveService::CheckIsEditable(ecs::Entity entity, ecs::ComponentID 
     return entity_setup_param_editor_->IsEditable(entity, component_id);
 }
 
-utility_header::ConstSharedLockedValue<component_editor::FieldMap> EntityArchiveService::GetComponentFieldMap(
+const component_editor::FieldMap& EntityArchiveService::GetComponentFieldMap(
     ecs::ComponentID component_id) const
 {
-    // Lock for shared access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
     // Get component name
     auto name_it = component_name_map_.find(component_id);
     assert(name_it != component_name_map_.end() && "Component ID not found in component name map.");
@@ -193,8 +202,7 @@ utility_header::ConstSharedLockedValue<component_editor::FieldMap> EntityArchive
     assert(reflection_it != component_reflection_registry_.end() && "Component reflection info not found.");
     const component_editor::ComponentReflectionInfo& reflection_info = *reflection_it;
 
-    return utility_header::ConstSharedLockedValue<component_editor::FieldMap>(
-        reflection_info.GetFieldMap(), std::move(lock));
+    return reflection_info.GetFieldMap();
 }
 
 const uint8_t* EntityArchiveService::GetSetupParamField(
@@ -225,22 +233,17 @@ const uint8_t* EntityArchiveService::GetSetupParamField(
     const uint8_t* base_address = reinterpret_cast<const uint8_t*>(setup_param);
     const uint8_t* field_address = base_address + field_info.offset;
 
-    // Create locked value
     return field_address;
 }
 
-utility_header::ConstSharedLockedValue<ecs::Component::SetupParam> EntityArchiveService::GetSetupParam(
+const ecs::Component::SetupParam& EntityArchiveService::GetSetupParam(
     ecs::Entity entity, ecs::ComponentID component_id) const
 {
-    // Lock for shared access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
     // Get the setup param
     const ecs::Component::SetupParam* setup_param = entity_setup_param_manager_->GetSetupParam(entity, component_id);
     assert(setup_param != nullptr && "Setup param not found for the entity's component.");
 
-    // Create locked value
-    return utility_header::ConstSharedLockedValue<ecs::Component::SetupParam>(*setup_param, std::move(lock));
+    return *setup_param;
 }
 
 void EntityArchiveService::ReplaceSetupParam(
@@ -257,35 +260,20 @@ void EntityArchiveService::ReplaceSetupParam(
     entity_setup_param_map_[entity][component_id] = std::move(new_setup_param);
 }
 
-utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap> EntityArchiveService::GetComponentNameMap() const
+const component_editor::ComponentNameMap& EntityArchiveService::GetComponentNameMap() const
 {
-    // Lock for shared access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
-    // Create locked value
-    return utility_header::ConstSharedLockedValue<component_editor::ComponentNameMap>(
-        component_name_map_, std::move(lock));
+    return component_name_map_;
 }
 
-utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap> EntityArchiveService::GetComponentAdderMap() const
+const component_editor::ComponentAdderMap& EntityArchiveService::GetComponentAdderMap() const
 {
-    // Lock for shared access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
-    // Create locked value
-    return utility_header::ConstSharedLockedValue<component_editor::ComponentAdderMap>(
-        component_adder_map_, std::move(lock));
+    return component_adder_map_;
 }
 
-utility_header::ConstSharedLockedValue<ComponentSetupParamFieldTypeRegistry> 
+const ComponentSetupParamFieldTypeRegistry&
     EntityArchiveService::GetSetupParamFieldTypeRegistry() const
 {
-    // Lock for shared access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
-    // Create locked value
-    return utility_header::ConstSharedLockedValue<ComponentSetupParamFieldTypeRegistry>(
-        setup_param_field_type_registry_, std::move(lock));
+    return setup_param_field_type_registry_;
 }
 
 bool EntityArchiveService::CheckComponentEditable(ecs::ComponentID component_id) const
@@ -316,15 +304,10 @@ std::vector<component_editor::EditedInfo> EntityArchiveService::GetEditedInfos()
     return entity_setup_param_editor_->GetEditedInfos();
 }
 
-utility_header::ConstSharedLockedValue<MaterialSetupParamEditorRegistry> 
+const MaterialSetupParamEditorRegistry&
     EntityArchiveService::GetMaterialSetupParamEditorRegistry() const
 {
-    // Lock for shared access
-    std::shared_lock<std::shared_mutex> lock = LockShared();
-
-    // Create locked value
-    return utility_header::ConstSharedLockedValue<MaterialSetupParamEditorRegistry>(
-        material_setup_param_editor_registry_, std::move(lock));
+    return material_setup_param_editor_registry_;
 }
 
 void EntityArchiveService::ReplaceSetupParam(

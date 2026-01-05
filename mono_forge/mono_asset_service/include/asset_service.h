@@ -54,6 +54,12 @@ public:
 
     // Get the list of loaded asset handle IDs
     virtual std::vector<asset_loader::AssetHandleID> GetLoadedAssetIDs() const = 0;
+
+    // Get the asset handle ID by asset name
+    virtual std::unordered_map<std::string, asset_loader::AssetHandleID>& GetLoadedAssetNameToHandleIDMap() = 0;
+
+    // Get the asset handle ID by asset name (const version)
+    virtual const std::unordered_map<std::string, asset_loader::AssetHandleID>& GetLoadedAssetNameToHandleIDMap() const = 0;
 };
 
 // The number of command queue buffers for asset_service
@@ -112,6 +118,8 @@ protected:
     virtual const asset_loader::Asset& GetAsset(asset_loader::AssetHandleID id) const override;
     virtual bool IsAssetLoaded(asset_loader::AssetHandleID id) const override;
     virtual std::vector<asset_loader::AssetHandleID> GetLoadedAssetIDs() const override;
+    virtual std::unordered_map<std::string, asset_loader::AssetHandleID>& GetLoadedAssetNameToHandleIDMap() override;
+    virtual const std::unordered_map<std::string, asset_loader::AssetHandleID>& GetLoadedAssetNameToHandleIDMap() const override;
 
 private:
     /*******************************************************************************************************************
@@ -146,6 +154,9 @@ private:
         std::unique_ptr<asset_loader::Asset> asset = nullptr;
     };
     std::vector<LoadingAssetInfo> in_progress_loaded_assets_;
+
+    // Map from loaded asset name to handle ID
+    std::unordered_map<std::string, asset_loader::AssetHandleID> loaded_asset_name_to_handle_id_map_;
 };
 
 } // namespace mono_asset_service

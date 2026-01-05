@@ -37,6 +37,15 @@ class AssetSourceData
 {
 public:
     virtual ~AssetSourceData() = default;
+
+    // Get the name of the asset
+    std::string_view GetName() const { return name_; }
+
+    // Set the name of the asset
+    void SetName(const std::string& name) { name_ = name; }
+
+private:
+    std::string name_ = "";
 };
 
 // The interface for all asset loaders

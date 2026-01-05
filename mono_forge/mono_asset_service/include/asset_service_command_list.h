@@ -30,6 +30,9 @@ public:
 
     // Release a loading asset source with the given handle ID
     void ReleaseLoadingAssetSource(asset_loader::AssetHandleID handle_id);
+
+    // Export asset descriptions to a file
+    void ExportAssetDescriptionsToFile(const std::wstring& file_path, const std::vector<asset_loader::AssetHandleID>& asset_ids);
 };
 
 } // namespace mono_asset_service
