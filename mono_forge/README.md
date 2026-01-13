@@ -1,0 +1,75 @@
+﻿## Mono forge Game engine
+C++、DirectX12を使用したゲームエンジンの基盤プログラムになります。
+エディター上で、シーンを作成し、それの保存を行うことができます。
+
+## プロジェクト構成
+以下が、プロジェクトの主要なプロジェクト構成です。
+末尾に「test」がついているプロジェクトは、単体テスト用のプロジェクトになります。
+- asset_loader
+  - アセットの読み込みを行う機能を提供
+- class_template
+  - 各種クラスのテンプレートを提供
+- component_editor
+  - コンポーネントのSetupパラメータのリフレクション作成、管理を行うための機能を提供
+- directx12_util
+  - DirectX12の機能をラップしたユーティリティ機能を提供
+- directxtex
+  - DirectXTexライブラリ
+- directxtk12
+  - DirectXTK12ライブラリ
+- ecs
+  - エンティティ・コンポーネント・システムの機能を提供
+- geometry
+  - 描画に使用できるジオメトリデータの生成機能を提供
+- imgui
+  - DearImGuiライブラリ
+- material_editor
+  - マテリアルのSetupパラメータを編集、管理する機能を提供
+- memory_allocator
+  - 固定長メモリアロケーターの機能を提供
+- model_converter
+  - 独自モデルフォーマット(.mfm)への変換機能を提供
+- mono_asset_extension
+  - MeshやTextureというアセットを読み込むサービスを利用するための拡張機能を提供
+- mono_asset_service
+  - アセットの読み込み、管理を行うサービスを提供
+- mono_entity_archive_extension
+  - エンティティに関連する情報を保存するサービスを利用するための拡張機能を提供
+- mono_entity_archive_service
+  - エンティティに関連する情報の保存、読み込みを行うサービスを提供
+- mono_forge
+  - ゲームエンジンのメインプロジェクト。エントリーポイントを含む
+- mono_forge_app_template
+  - ゲームエンジンを使用して作成するアプリケーションのテンプレートを提供。今回はこのプロジェクトファイルを保存対象とすることで、シーンの保存が行える
+- mono_forge_model
+  - 独自モデルフォーマット(.mfm)のモデルデータを読み込む機能を提供
+- mono_graphics_extension
+  - グラフィックス描画を行うサービスを利用するための拡張機能を提供
+- mono_graphics_service
+  - レンダーグラフを利用し、グラフィックス描画を行うサービスを提供
+- mono_meta_extension
+  - エンティティへ固有情報を付加するための拡張機能を提供
+- mono_scene_extension
+  - シーンの要素としてエンティティらを管理するための拡張機能を提供
+- mono_service
+  - 各サービスのインタフェースや、各プロキシを管理する機能を提供
+- mono_transform_extension
+  - エンティティにTransformコンポーネントを付加するための拡張機能を提供
+- mono_transform_service
+  - トランスフォームを管理するサービスを提供
+- mono_window_extension
+  - ウィンドウ作成、管理を行うサービスを利用するための拡張機能を提供
+- mono_window_service
+  - window_providerを使用し、ウィンドウ作成、管理を行うサービスを提供
+- render_graph
+  - レンダーグラフの機能を提供
+- template_gtest
+  - GoogleTestのテンプレートプロジェクト
+- template_project
+  - C++プロジェクトのテンプレートプロジェクト
+- transform_evaluator
+  - トランスフォームらを管理する機能を提供
+- utility_header
+  - 各種ユーティリティのヘッダーファイルを提供
+- window_provider
+  - ウィンドウ作成、管理を行う機能を提供
