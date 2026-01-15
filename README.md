@@ -1,7 +1,7 @@
 # Portfolio
 
 ## ポートフォリオの閲覧方法
-[ポートフォリオ](https://speakerdeck.com/tanso/zhui-ye-tai-cheng-potohuorio)になります。
+[ポートフォリオ](https://speakerdeck.com/tanso/portfolio)になります。
 SpeakerDeckにアップロードしているため、このリンクでダウンロードせずに閲覧できます。
 また、本リポジトリにもPDF形式であります。
 
